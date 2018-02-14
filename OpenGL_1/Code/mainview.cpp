@@ -93,14 +93,14 @@ void MainView::initializeGL() {
     glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)(3*sizeof(float)));
 
     //create vertices for cube
-    Vertex v1 = Vertex(-1, -1, -1, 0, 0, 1);
-    Vertex v2 = Vertex(-1, -1, 1, 0, 0, 1);
-    Vertex v5 = Vertex(-1, 1, -1, 0, 0, 1);
+    Vertex v1 = Vertex(-1, -1, -1, 1, 0, 0);
+    Vertex v2 = Vertex(-1, -1, 1, 0, 1, 0);
+    Vertex v5 = Vertex(-1, 1, -1, 1, 0, 0);
     Vertex v6 = Vertex(-1, 1, 1, 0, 0, 1);
-    Vertex v4 = Vertex(1, -1, -1, 0, 0, 1);
+    Vertex v4 = Vertex(1, -1, -1, 0, 1, 0);
     Vertex v3 = Vertex(1, -1, 1, 0, 0, 1);
     Vertex v8 = Vertex(1, 1, -1, 0, 0, 1);
-    Vertex v7 = Vertex(1, 1, 1, 0, 0, 1);
+    Vertex v7 = Vertex(1, 1, 1, 1, 0, 0);
 
     Vertex bottom[6] = {v4, v3, v1, v2, v1, v3};
     Vertex front[6] = {v2, v3, v6, v3, v7, v6};
@@ -128,9 +128,9 @@ void MainView::initializeGL() {
 
 
     //create vertice for pyramid
-    Vertex p9 = Vertex(0,1,0, 0, 1, 0);
-    Vertex p1 = Vertex(-1, -1, -1, 0, 1, 0);
-    Vertex p2 = Vertex(-1, -1, 1, 0, 1, 0);
+    Vertex p9 = Vertex(0,1,0, 1, 0, 0);
+    Vertex p1 = Vertex(-1, -1, -1, 0, 0, 1);
+    Vertex p2 = Vertex(-1, -1, 1, 0, 0, 1);
     Vertex p4 = Vertex(1, -1, -1, 0, 1, 0);
     Vertex p3 = Vertex(1, -1, 1, 0, 1, 0);
 
