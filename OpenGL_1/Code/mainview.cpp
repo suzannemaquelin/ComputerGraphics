@@ -145,8 +145,32 @@ void MainView::initializeGL() {
     glBufferData(GL_ARRAY_BUFFER,18*sizeof(Vertex),pyramid,GL_STATIC_DRAW);
 
     //translations
-    translation_cube = QMatrix4x4(0,0,0,2,0,0,0,0,0,0,0,-6,0,0,0,1);
-    translation_pyramid = QMatrix4x4(0,0,0,-2,0,0,0,0,0,0,0,-6,0,0,0,1);
+//    translation_cube = QMatrix4x4(1,0,0,2,0,1,0,0,0,0,1,-6,0,0,0,1);
+//    translation_pyramid = QMatrix4x4(1,0,0,-2,0,1,0,0,0,0,1,-6,0,0,0,1);
+    translation_cube = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+    translation_pyramid = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+
+    perspective = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+
+    //get perspective matrix
+    float n, f, l, r, t, b;
+//    n = 1.0; f = -1.0; l = -1.0; r = 1.0; t = 1.0; b = -1.0;
+//    perspective = QMatrix4x4(2*n/(r-l), 0, (r+l)/(r-l), 0,
+//                             0, 2*n/(t-b), (t+b)/(t-b), 0,
+//                             0, 0, (n+f)/(n-f), 2*f*n/(n-f),
+//                             0, 0, -1, 0);
 
 }
 
@@ -159,7 +183,8 @@ void MainView::createShaderProgram()
                                            ":/shaders/fragshader.glsl");
     shaderProgram.link();
 
-   shaderProgram.uniformLocation("translation");
+   //shaderProgram.uniformLocation("translation");
+   //shaderProgram.uniformLocation("perspective");
 }
 
 // --- OpenGL drawing
@@ -177,12 +202,14 @@ void MainView::paintGL() {
     shaderProgram.bind();
 
     // Draw cube here
-    glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 16*sizeof(float), GL_FALSE, translation_cube.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cube.data());
     glBindVertexArray(VAO_cube);
     glDrawArrays(GL_TRIANGLES,0,36);
 
     // Draw pyramid here
-    glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 16*sizeof(float), GL_FALSE, translation_pyramid.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_pyramid.data());
     glBindVertexArray(VAO_pyramid);
     glDrawArrays(GL_TRIANGLES,0,18);
 
