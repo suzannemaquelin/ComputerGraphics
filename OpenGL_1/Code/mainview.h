@@ -24,9 +24,8 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLuint VBO_pyramid;
     GLuint VAO_cube;
     GLuint VAO_pyramid;
-    QMatrix4x4 translation_cube;
-    QMatrix4x4 translation_pyramid;
-    QMatrix4x4 perspective;
+    QMatrix4x4 translation_cube, translation_pyramid;
+    QMatrix4x4 perspective, rotation, scaling;
 
 public:
     enum ShadingMode : GLuint

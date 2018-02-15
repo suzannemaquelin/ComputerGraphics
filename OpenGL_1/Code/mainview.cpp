@@ -165,13 +165,25 @@ void MainView::initializeGL() {
                 0, 0, 0, 1);
 
     //get perspective matrix
-    float n, f, l, r, t, b;
-//    n = 1.0; f = -1.0; l = -1.0; r = 1.0; t = 1.0; b = -1.0;
+//    float n, f, l, r, t, b;
+//    n = -1.0; f = 5.0; l = -5.0; r = 5.0; t = 5.0; b = -5.0;
 //    perspective = QMatrix4x4(2*n/(r-l), 0, (r+l)/(r-l), 0,
-//                             0, 2*n/(t-b), (t+b)/(t-b), 0,
+//                             0, 2*n/(t-b), (t+b)/(t-b)scale, 0,
 //                             0, 0, (n+f)/(n-f), 2*f*n/(n-f),
 //                             0, 0, -1, 0);
+    //perspective.perspective(60.0, 1, 1, -1);
 
+    rotation = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+
+    scaling = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
 }
 
 void MainView::createShaderProgram()
@@ -183,8 +195,6 @@ void MainView::createShaderProgram()
                                            ":/shaders/fragshader.glsl");
     shaderProgram.link();
 
-   //shaderProgram.uniformLocation("translation");
-   //shaderProgram.uniformLocation("perspective");
 }
 
 // --- OpenGL drawing
@@ -201,14 +211,16 @@ void MainView::paintGL() {
 
     shaderProgram.bind();
 
-    // Draw cube here
     glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("rotation"), 1, GL_FALSE, rotation.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("scaling"), 1, GL_FALSE, scaling.data());
+
+    // Draw cube here
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cube.data());
     glBindVertexArray(VAO_cube);
     glDrawArrays(GL_TRIANGLES,0,36);
 
     // Draw pyramid here
-    glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_pyramid.data());
     glBindVertexArray(VAO_pyramid);
     glDrawArrays(GL_TRIANGLES,0,18);
@@ -229,25 +241,55 @@ void MainView::resizeGL(int newWidth, int newHeight)
     // TODO: Update projection to fit the new aspect ratio
     Q_UNUSED(newWidth)
     Q_UNUSED(newHeight)
+    //glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
 }
 
 // --- Public interface
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-    qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ << ")";
-    Q_UNIMPLEMENTED();
+    qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ  << ")" ;
+    float rX = (rotateX/360.0)*(2*M_PI);
+    float rY = (rotateY/360.0)*(2*M_PI);
+    float rZ = (rotateZ/360.0)*(2*M_PI);
+    qDebug() << "rotateX:" << rX << " sin of rotateX" << (sin(rX));
+    QMatrix4x4 rotationX =  QMatrix4x4(
+                1, 0, 0, 0,
+                0, cos(rX), -sin(rX), 0,
+                0, sin(rX), cos(rX), 0,
+                0, 0, 0, 1);
+
+    QMatrix4x4 rotationY =  QMatrix4x4(
+                cos(rY), 0, sin(rY), 0,
+                0, 1, 0, 0,
+                -sin(rY), 0, cos(rY), 0,
+                0, 0, 0, 1);
+
+    QMatrix4x4 rotationZ =  QMatrix4x4(
+                cos(rZ), -sin(rZ), 0, 0,
+                sin(rZ), cos(rZ), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+    rotation = rotationX *rotationY * rotationZ;
+    update();
 }
 
 void MainView::setScale(int scale)
 {
     qDebug() << "Scale changed to " << scale;
-    Q_UNIMPLEMENTED();
+    float s = scale/100.0;
+    scaling =  QMatrix4x4(
+                s, 0, 0, 0,
+                0, s, 0, 0,
+                0, 0, s, 0,
+                0, 0, 0, 1);
+    update();
 }
 
 void MainView::setShadingMode(ShadingMode shading)
 {
     qDebug() << "Changed shading to" << shading;
+    //minimum: 1, max: 200
     Q_UNIMPLEMENTED();
 }
 
