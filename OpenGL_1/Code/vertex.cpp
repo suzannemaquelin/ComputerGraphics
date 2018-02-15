@@ -1,6 +1,8 @@
 #include "vertex.h"
 #include<vector>
 
+Vertex::Vertex(){}
+
 Vertex::Vertex(float xc, float yc, float zc, float r, float g, float b)
 {
     this->coordinates[0] = xc;

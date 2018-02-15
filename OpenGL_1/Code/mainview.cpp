@@ -79,8 +79,40 @@ void MainView::initializeGL() {
     //shaderProgram = new QOpenGLShaderProgram();
     createShaderProgram();
 
-    //cube
+    createCube();
+    createPyramid();
+    createSphere();
+    matrixInit();
 
+
+
+}
+void MainView::createSphere()
+{
+    sphere = (Model(":/models/sphere.obj")).getVertices();
+
+    Vertex s[sphere.length()];
+
+    for (int i = 0; i < sphere.length(); i++) {
+        s[i] = Vertex(sphere[i].x(), sphere[i].y(), sphere[i].z(),0,0,0);
+    }
+    glGenVertexArrays(1,&VAO_sphere);
+    glBindVertexArray(VAO_sphere);
+    glGenBuffers(1,&VBO_sphere);
+    glBindBuffer(GL_ARRAY_BUFFER,VBO_sphere);
+
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)0);
+    glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)(3*sizeof(float)));
+
+    glBufferData(GL_ARRAY_BUFFER,sphere.length()*sizeof(Vertex),s,GL_STATIC_DRAW);
+//    free(s);
+}
+
+void MainView::createCube()
+{
     glGenVertexArrays(1,&VAO_cube);
     glBindVertexArray(VAO_cube);
     glGenBuffers(1,&VBO_cube);
@@ -92,7 +124,6 @@ void MainView::initializeGL() {
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)0);
     glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(Vertex),(void*)(3*sizeof(float)));
 
-    //create vertices for cube
     Vertex v1 = Vertex(-1, -1, -1, 1, 0, 0);
     Vertex v2 = Vertex(-1, -1, 1, 0, 1, 0);
     Vertex v5 = Vertex(-1, 1, -1, 1, 0, 0);
@@ -112,8 +143,10 @@ void MainView::initializeGL() {
 
     glBufferData(GL_ARRAY_BUFFER,36*sizeof(Vertex),cube,GL_STATIC_DRAW);
 
-    //pyramid
+}
 
+void MainView::createPyramid()
+{
     glGenVertexArrays(1,&VAO_pyramid);
     glBindVertexArray(VAO_pyramid);
     glGenBuffers(1,&VBO_pyramid);
@@ -144,9 +177,10 @@ void MainView::initializeGL() {
 
     glBufferData(GL_ARRAY_BUFFER,18*sizeof(Vertex),pyramid,GL_STATIC_DRAW);
 
-    //translations
-//    translation_cube = QMatrix4x4(1,0,0,2,0,1,0,0,0,0,1,-6,0,0,0,1);
-//    translation_pyramid = QMatrix4x4(1,0,0,-2,0,1,0,0,0,0,1,-6,0,0,0,1);
+}
+
+void MainView::matrixInit()
+{
     translation_cube = QMatrix4x4(
                 1, 0, 0, 0,
                 0, 1, 0, 0,
@@ -157,13 +191,27 @@ void MainView::initializeGL() {
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
+    translation_sphere = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+    default_scale = QMatrix4x4(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1);
+    original_scale_sphere = QMatrix4x4(
+                0.04, 0, 0, 0,
+                0, 0.04, 0, 0,
+                0, 0, 0.04, 0,
+                0, 0, 0, 1);
 
     perspective = QMatrix4x4(
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
-
     //get perspective matrix
 //    float n, f, l, r, t, b;
 //    n = -1.0; f = 5.0; l = -5.0; r = 5.0; t = 5.0; b = -5.0;
@@ -178,16 +226,18 @@ void MainView::initializeGL() {
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
-
     scaling = QMatrix4x4(
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1);
+
 }
 
 void MainView::createShaderProgram()
-{
+{glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cube.data());
+    glBindVertexArray(VAO_cube);
+    glDrawArrays(GL_TRIANGLES,0,36);
     // Create shader program
     shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,
                                            ":/shaders/vertshader.glsl");
@@ -199,7 +249,7 @@ void MainView::createShaderProgram()
 
 // --- OpenGL drawing
 
-/**
+/**default_scale
  * @brief MainView::paintGL
  *
  * Actual function used for drawing to the screen
@@ -214,6 +264,7 @@ void MainView::paintGL() {
     glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
     glUniformMatrix4fv(shaderProgram.uniformLocation("rotation"), 1, GL_FALSE, rotation.data());
     glUniformMatrix4fv(shaderProgram.uniformLocation("scaling"), 1, GL_FALSE, scaling.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("original_scale"), 1, GL_FALSE, default_scale.data());
 
     // Draw cube here
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cube.data());
@@ -224,6 +275,13 @@ void MainView::paintGL() {
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_pyramid.data());
     glBindVertexArray(VAO_pyramid);
     glDrawArrays(GL_TRIANGLES,0,18);
+
+    //Draw sphere here
+    glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_sphere.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("original_scale"), 1, GL_FALSE, original_scale_sphere.data());
+    glBindVertexArray(VAO_sphere);
+    glDrawArrays(GL_TRIANGLES,0,sphere.length());
+
 
     shaderProgram.release();
 }
@@ -248,11 +306,11 @@ void MainView::resizeGL(int newWidth, int newHeight)
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-    qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ  << ")" ;
+//    qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ  << ")" ;
     float rX = (rotateX/360.0)*(2*M_PI);
     float rY = (rotateY/360.0)*(2*M_PI);
     float rZ = (rotateZ/360.0)*(2*M_PI);
-    qDebug() << "rotateX:" << rX << " sin of rotateX" << (sin(rX));
+//    qDebug() << "rotateX:" << rX << " sin of rotateX" << (sin(rX));
     QMatrix4x4 rotationX =  QMatrix4x4(
                 1, 0, 0, 0,
                 0, cos(rX), -sin(rX), 0,
@@ -276,7 +334,7 @@ void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 
 void MainView::setScale(int scale)
 {
-    qDebug() << "Scale changed to " << scale;
+//    qDebug() << "Scale changed to " << scale;
     float s = scale/100.0;
     scaling =  QMatrix4x4(
                 s, 0, 0, 0,

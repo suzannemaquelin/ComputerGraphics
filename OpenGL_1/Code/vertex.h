@@ -6,6 +6,7 @@
 class Vertex
 {
 public:
+    Vertex();
     Vertex(float x, float y, float z, float red, float green, float blue);
     float coordinates[3];
     float colour[3];
