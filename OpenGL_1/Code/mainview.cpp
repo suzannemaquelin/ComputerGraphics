@@ -2,6 +2,7 @@
 #include "math.h"
 #include "vertex.h"
 
+#include <cstdlib>
 #include <QDateTime>
 
 /**
@@ -83,10 +84,8 @@ void MainView::initializeGL() {
     createPyramid();
     createSphere();
     matrixInit();
-
-
-
 }
+
 void MainView::createSphere()
 {
     sphere = (Model(":/models/sphere.obj")).getVertices();
@@ -94,7 +93,7 @@ void MainView::createSphere()
     Vertex s[sphere.length()];
 
     for (int i = 0; i < sphere.length(); i++) {
-        s[i] = Vertex(sphere[i].x(), sphere[i].y(), sphere[i].z(),0,0,0);
+        s[i] = Vertex(sphere[i].x(), sphere[i].y(), sphere[i].z(),rand()%2,rand()%2,rand()%2);
     }
     glGenVertexArrays(1,&VAO_sphere);
     glBindVertexArray(VAO_sphere);
@@ -219,7 +218,9 @@ void MainView::matrixInit()
 //                             0, 2*n/(t-b), (t+b)/(t-b)scale, 0,
 //                             0, 0, (n+f)/(n-f), 2*f*n/(n-f),
 //                             0, 0, -1, 0);
-    //perspective.perspective(60.0, 1, 1, -1);
+    float aspect_ratio = this->width()/this->height();
+    perspective.perspective(60.0, aspect_ratio, 1.0, 1.0);
+
 
     rotation = QMatrix4x4(
                 1, 0, 0, 0,

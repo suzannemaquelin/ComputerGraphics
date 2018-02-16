@@ -50,7 +50,7 @@ protected:
     void createCube();
     void createPyramid();
     void matrixInit();
-
+    void translationMatrix(float x,float y, float z);
     // Functions for keyboard input events
     void keyPressEvent(QKeyEvent *ev);
     void keyReleaseEvent(QKeyEvent *ev);
