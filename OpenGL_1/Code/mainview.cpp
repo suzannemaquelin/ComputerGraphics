@@ -180,65 +180,31 @@ void MainView::createPyramid()
 
 void MainView::matrixInit()
 {
-    translation_cube = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-    translation_pyramid = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-    translation_sphere = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-    default_scale = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-    original_scale_sphere = QMatrix4x4(
-                0.04, 0, 0, 0,
-                0, 0.04, 0, 0,
-                0, 0, 0.04, 0,
-                0, 0, 0, 1);
+// Translations
+    // Cube to 2,0,−6
+    translation_cube = QMatrix4x4();
+//    translation_cube.translate(QVector3D(2,0,-6));
+    translation_cube.translate(QVector3D(0,0,0));
+    // Pyramid to -2,0,−6
+    translation_pyramid = QMatrix4x4();
+//    translation_pyramid.translate(QVector3D(-2,0,-6));
+    translation_pyramid.translate(QVector3D(0,0,0));
+    // Sphere to 0,0,−10
+    translation_sphere = QMatrix4x4();
+//    translation_sphere.translate(QVector3D(0,0,-10));
+    translation_sphere.translate(QVector3D(0,0,0));
 
-    perspective = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-    //get perspective matrix
-//    float n, f, l, r, t, b;
-//    n = -1.0; f = 5.0; l = -5.0; r = 5.0; t = 5.0; b = -5.0;
-//    perspective = QMatrix4x4(2*n/(r-l), 0, (r+l)/(r-l), 0,
-//                             0, 2*n/(t-b), (t+b)/(t-b)scale, 0,
-//                             0, 0, (n+f)/(n-f), 2*f*n/(n-f),
-//                             0, 0, -1, 0);
-    float aspect_ratio = this->width()/this->height();
-    perspective.perspective(60.0, aspect_ratio, 1.0, 1.0);
+// Rotation/scale
+    rotation = QMatrix4x4();
+    scale = QMatrix4x4();
 
-
-    rotation = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-    scaling = QMatrix4x4(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1);
-
+// Perspective
+    perspective = QMatrix4x4();
+    perspective.perspective(60, aspect_ratio, 1, -1);
 }
 
 void MainView::createShaderProgram()
-{glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cube.data());
-    glBindVertexArray(VAO_cube);
-    glDrawArrays(GL_TRIANGLES,0,36);
+{
     // Create shader program
     shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,
                                            ":/shaders/vertshader.glsl");
@@ -264,8 +230,11 @@ void MainView::paintGL() {
 
     glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
     glUniformMatrix4fv(shaderProgram.uniformLocation("rotation"), 1, GL_FALSE, rotation.data());
-    glUniformMatrix4fv(shaderProgram.uniformLocation("scaling"), 1, GL_FALSE, scaling.data());
-    glUniformMatrix4fv(shaderProgram.uniformLocation("original_scale"), 1, GL_FALSE, default_scale.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("scale"), 1, GL_FALSE, scale.data());
+    QMatrix4x4 sphereScale = QMatrix4x4(scale);
+    sphereScale.scale(0.04);
+
+//    glUniformMatrix4fv(shaderProgram.uniformLocation("original_scale"), 1, GL_FALSE, default_scale.data());
 
     // Draw cube here
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cube.data());
@@ -279,7 +248,7 @@ void MainView::paintGL() {
 
     //Draw sphere here
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_sphere.data());
-    glUniformMatrix4fv(shaderProgram.uniformLocation("original_scale"), 1, GL_FALSE, original_scale_sphere.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("scale"), 1, GL_FALSE, sphereScale.data());
     glBindVertexArray(VAO_sphere);
     glDrawArrays(GL_TRIANGLES,0,sphere.length());
 
@@ -298,33 +267,33 @@ void MainView::paintGL() {
 void MainView::resizeGL(int newWidth, int newHeight) 
 {
     // TODO: Update projection to fit the new aspect ratio
-    Q_UNUSED(newWidth)
-    Q_UNUSED(newHeight)
-    //glUniformMatrix4fv(shaderProgram.uniformLocation("perspective"), 1, GL_FALSE, perspective.data());
+//    Q_UNUSED(newWidth)
+//    Q_UNUSED(newHeight)
+    aspect_ratio = newWidth / (float) newHeight;
+//    perspective = QMatrix4x4();
+//    perspective.perspective();
 }
 
 // --- Public interface
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-//    qDebug() << "Rotation changed to (" << rotateX << "," << rotateY << "," << rotateZ  << ")" ;
     float rX = (rotateX/360.0)*(2*M_PI);
     float rY = (rotateY/360.0)*(2*M_PI);
     float rZ = (rotateZ/360.0)*(2*M_PI);
-//    qDebug() << "rotateX:" << rX << " sin of rotateX" << (sin(rX));
-    QMatrix4x4 rotationX =  QMatrix4x4(
+    QMatrix4x4 rotationX = QMatrix4x4(
                 1, 0, 0, 0,
                 0, cos(rX), -sin(rX), 0,
                 0, sin(rX), cos(rX), 0,
                 0, 0, 0, 1);
 
-    QMatrix4x4 rotationY =  QMatrix4x4(
+    QMatrix4x4 rotationY = QMatrix4x4(
                 cos(rY), 0, sin(rY), 0,
                 0, 1, 0, 0,
                 -sin(rY), 0, cos(rY), 0,
                 0, 0, 0, 1);
 
-    QMatrix4x4 rotationZ =  QMatrix4x4(
+    QMatrix4x4 rotationZ = QMatrix4x4(
                 cos(rZ), -sin(rZ), 0, 0,
                 sin(rZ), cos(rZ), 0, 0,
                 0, 0, 1, 0,
@@ -333,15 +302,11 @@ void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
     update();
 }
 
-void MainView::setScale(int scale)
+void MainView::setScale(int scaleIn)
 {
-//    qDebug() << "Scale changed to " << scale;
-    float s = scale/100.0;
-    scaling =  QMatrix4x4(
-                s, 0, 0, 0,
-                0, s, 0, 0,
-                0, 0, s, 0,
-                0, 0, 0, 1);
+    float s = scaleIn/100.0;
+    scale = QMatrix4x4();
+    scale.scale(s);
     update();
 }
 
