@@ -187,11 +187,11 @@ void MainView::matrixInit()
     // Cube to 2,0,−6
     translation_cube = QMatrix4x4();
 //    translation_cube.translate(QVector3D(2,0,-6));
-    translation_cube.translate(QVector3D(0,0,0));
+    translation_cube.translate(QVector3D(0.5,0,0));
     // Pyramid to -2,0,−6
     translation_pyramid = QMatrix4x4();
 //    translation_pyramid.translate(QVector3D(-2,0,-6));
-    translation_pyramid.translate(QVector3D(0,0,0));
+    translation_pyramid.translate(QVector3D(-0.5,0,0));
     // Sphere to 0,0,−10
     translation_sphere = QMatrix4x4();
 //    translation_sphere.translate(QVector3D(0,0,-10));
@@ -204,7 +204,7 @@ void MainView::matrixInit()
 // Perspective
     perspective = QMatrix4x4();
     aspect_ratio = this->width()/this->height();
-    perspective.perspective(60, aspect_ratio, 1, -1);
+    perspective.perspective(60, aspect_ratio, 1, 1);
 }
 
 void MainView::createShaderProgram()
