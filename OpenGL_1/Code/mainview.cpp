@@ -34,8 +34,11 @@ MainView::~MainView() {
 
     glDeleteBuffers(1, &VBO_cube);
     glDeleteBuffers(1, &VBO_pyramid);
+    glDeleteBuffers(1, &VBO_sphere);
     glDeleteVertexArrays(1, &VAO_cube);
     glDeleteVertexArrays(1, &VAO_pyramid);
+    glDeleteVertexArrays(1, &VAO_sphere);
+
 }
 
 // --- OpenGL initialization
@@ -183,8 +186,8 @@ void MainView::matrixInit()
 // Translations
     // Cube to 2,0,−6
     translation_cube = QMatrix4x4();
-//    translation_cube.translate(QVector3D(2,0,-6));
-    translation_cube.translate(QVector3D(0,0,0));
+    translation_cube.translate(QVector3D(2,0,-6));
+//    translation_cube.translate(QVector3D(0,0,0));
     // Pyramid to -2,0,−6
     translation_pyramid = QMatrix4x4();
 //    translation_pyramid.translate(QVector3D(-2,0,-6));
@@ -200,7 +203,7 @@ void MainView::matrixInit()
 
 // Perspective
     perspective = QMatrix4x4();
-    perspective.perspective(60, aspect_ratio, 1, -1);
+    perspective.perspective(60, aspect_ratio, 50, 1800);
 }
 
 void MainView::createShaderProgram()
@@ -270,6 +273,8 @@ void MainView::resizeGL(int newWidth, int newHeight)
 //    Q_UNUSED(newWidth)
 //    Q_UNUSED(newHeight)
     aspect_ratio = newWidth / (float) newHeight;
+    //perspective.perspective(60, aspect_ratio, 1, -1);
+    //update();
 //    perspective = QMatrix4x4();
 //    perspective.perspective();
 }
@@ -278,9 +283,11 @@ void MainView::resizeGL(int newWidth, int newHeight)
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
+    //convert degrees to radians
     float rX = (rotateX/360.0)*(2*M_PI);
     float rY = (rotateY/360.0)*(2*M_PI);
     float rZ = (rotateZ/360.0)*(2*M_PI);
+
     QMatrix4x4 rotationX = QMatrix4x4(
                 1, 0, 0, 0,
                 0, cos(rX), -sin(rX), 0,
@@ -304,7 +311,9 @@ void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 
 void MainView::setScale(int scaleIn)
 {
+    //convert scale to value between 0 and 2
     float s = scaleIn/100.0;
+
     scale = QMatrix4x4();
     scale.scale(s);
     update();
@@ -313,7 +322,6 @@ void MainView::setScale(int scaleIn)
 void MainView::setShadingMode(ShadingMode shading)
 {
     qDebug() << "Changed shading to" << shading;
-    //minimum: 1, max: 200
     Q_UNIMPLEMENTED();
 }
 
