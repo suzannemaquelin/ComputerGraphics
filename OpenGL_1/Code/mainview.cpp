@@ -135,12 +135,13 @@ void MainView::createCube()
     Vertex v8 = Vertex(1, 1, -1, 0, 0, 1);
     Vertex v7 = Vertex(1, 1, 1, 1, 0, 0);
 
-    Vertex bottom[6] = {v4, v3, v1, v2, v1, v3};
-    Vertex front[6] = {v2, v3, v6, v3, v7, v6};
-    Vertex left[6] = {v6, v5, v2, v5, v1, v2};
-    Vertex right[6] = {v8, v7, v3, v3, v4, v8};
-    Vertex rear[6] = {v1, v5, v8, v8, v4, v1};
-    Vertex top[6] = {v5, v6, v8, v6, v7, v8};
+    //define triangles for every plane of cube
+    //bottom plane triangles = {v4, v3, v1, v2, v1, v3};
+    //front plane triangles = {v2, v3, v6, v3, v7, v6};
+    //left plane triangles = {v6, v5, v2, v5, v1, v2};
+    //right plane triangles = {v8, v7, v3, v3, v4, v8};
+    //rear plane triangles = {v1, v5, v8, v8, v4, v1};
+    //top plane triangles = {v5, v6, v8, v6, v7, v8};
     Vertex cube[36] = {v4, v3, v1, v2, v1, v3,v2, v3, v6, v3, v7, v6,v6, v5, v2, v5, v1, v2,v8, v7, v3, v3, v4, v8,v1, v5, v8, v8, v4, v1,v5, v6, v8, v6, v7, v8};
 
     glBufferData(GL_ARRAY_BUFFER,36*sizeof(Vertex),cube,GL_STATIC_DRAW);
@@ -169,11 +170,12 @@ void MainView::createPyramid()
     Vertex p4 = Vertex(1, -1, -1, 0, 1, 0);
     Vertex p3 = Vertex(1, -1, 1, 0, 1, 0);
 
-    Vertex pbottom[6] = {p4, p3, p1, p2, p1, p3};
-    Vertex pfront[3] = {p9, p2, p3};
-    Vertex prear[3] = {p9, p4, p1};
-    Vertex pleft[3] = {p9, p1, p2};
-    Vertex pright[3] = {p9, p3, p4};
+    //define triangles for every plane of the pyramid
+    //bottom plane triangles = {p4, p3, p1, p2, p1, p3};
+    //front plane triangle = {p9, p2, p3};
+    //rear plane triangle = {p9, p4, p1};
+    //left plane triangle = {p9, p1, p2};
+    //right plane triangle = {p9, p3, p4};
     Vertex pyramid[18] = {p4, p3, p1, p2, p1, p3,p9, p2, p3,p9, p4, p1,p9, p1, p2,p9, p3, p4};
 
 
