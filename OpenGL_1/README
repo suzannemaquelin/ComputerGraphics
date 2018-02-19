@@ -6,3 +6,11 @@ Also describe what controls (key short-cuts, mouse clicks, mouse movement etc) a
 
 If you have any suggestions/feedback for improving the practical assignments or support from teaching assistants, you may include it here OR post in anonymously on Nestor under Feedback.
 
+For this lab, we added 3 objects, namely a cube, a pyramid and a sphere. 
+We translated these objects using transformation matrices.
+We added the controls for scaling and rotation.
+
+Unfortunately, we were not able to get the right perspective using a projection matrix.
+Therefore, when we translate the objects to the given coordinates they dissapear from view.
+We have decided to make other translations which lie within view in order to show we are able to do translations.
+However, this means that our screenshots will not look the same as the ones given in the instructions file.

@@ -203,6 +203,8 @@ void MainView::matrixInit()
 
 // Perspective
     perspective = QMatrix4x4();
+    //aspect_ratio = this->width()/this->height();
+    aspect_ratio = 3;
     perspective.perspective(60, aspect_ratio, 1, -1);
 }
 
