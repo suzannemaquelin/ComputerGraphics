@@ -202,10 +202,12 @@ void MainView::matrixInit()
 // Rotation/scale
     rotation = QMatrix4x4();
     scale = QMatrix4x4();
+    rotation.setToIdentity();
+    scale.setToIdentity();
 
 // Perspective
     perspective = QMatrix4x4();
-    aspect_ratio = this->width()/this->height();
+    aspect_ratio = (float) width()/ (float) height();
     perspective.perspective(60, aspect_ratio, 1, 1);
 }
 
@@ -272,7 +274,7 @@ void MainView::paintGL() {
  */
 void MainView::resizeGL(int newWidth, int newHeight) 
 {
-    aspect_ratio = newWidth / (float) newHeight;
+    aspect_ratio = (float) newWidth / (float) newHeight;
     perspective.perspective(60, aspect_ratio, 1, 1);
     update();
 }
