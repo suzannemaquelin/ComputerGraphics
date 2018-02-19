@@ -14,3 +14,5 @@ Unfortunately, we were not able to get the right perspective using a projection 
 Therefore, when we translate the objects to the given coordinates they dissapear from view.
 We have decided to make other translations which lie within view in order to show we are able to do translations.
 However, this means that our screenshots will not look the same as the ones given in the instructions file.
+
+We asked the TA's what could be the cause of the perspective-problem. We received as response that the parameters of the perspective function were not correct. We experimented with the parameters, but even with the supposedly correct values, aspect_ratio being a float derived from width/height and the near plane 0.1 and far plane 100, it did not work.

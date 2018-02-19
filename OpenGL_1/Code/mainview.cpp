@@ -207,7 +207,8 @@ void MainView::matrixInit()
 
 // Perspective
     perspective = QMatrix4x4();
-    aspect_ratio = (float) width()/ (float) height();
+    aspect_ratio = (float) this->width()/ (float) this->height();
+
     perspective.perspective(60, aspect_ratio, 1, 1);
 }
 
@@ -313,8 +314,7 @@ void MainView::setScale(int scaleIn)
 {
     //convert scale to value between 0 and 2
     float s = scaleIn/100.0;
-
-    scale = QMatrix4x4();
+    scale.setToIdentity();
     scale.scale(s);
     update();
 }
