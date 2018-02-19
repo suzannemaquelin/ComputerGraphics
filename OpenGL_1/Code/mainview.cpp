@@ -270,14 +270,9 @@ void MainView::paintGL() {
  */
 void MainView::resizeGL(int newWidth, int newHeight) 
 {
-    // TODO: Update projection to fit the new aspect ratio
-//    Q_UNUSED(newWidth)
-//    Q_UNUSED(newHeight)
     aspect_ratio = newWidth / (float) newHeight;
-    //perspective.perspective(60, aspect_ratio, 1, -1);
-    //update();
-//    perspective = QMatrix4x4();
-//    perspective.perspective();
+    perspective.perspective(60, aspect_ratio, 1, 1);
+    update();
 }
 
 // --- Public interface
