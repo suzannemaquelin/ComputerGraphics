@@ -31,13 +31,12 @@ Hit Sphere::intersect(Ray const &ray)
     double term2 = (o.operator-(c)).length_2();
     double discriminant = term1*term1 - term2 + r*r;
 
-    if(discriminant < 0) {
+    if (discriminant < 0) {
         return Hit::NO_HIT();
     }
 
-    t = -term1 + sqrt(discriminant);
-//    return Hit::
-
+//    t = min(-term1 + sqrt(discriminant), -term1 - sqrt(discriminant));
+    t = -term1 - sqrt(discriminant);
 
     /****************************************************
     * RT1.2: NORMAL CALCULATION
@@ -48,8 +47,8 @@ Hit Sphere::intersect(Ray const &ray)
     * Insert calculation of the sphere's normal at the intersection point.
     ****************************************************/
 
-    Triple intersection = o.operator+(l.operator*(t));
-    Vector N = intersection.operator-(c);
+    Triple intersection = o +(l * t);
+    Vector N = intersection - c;
     N.normalize();
 
     return Hit(t,N);

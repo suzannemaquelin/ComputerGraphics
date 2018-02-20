@@ -51,41 +51,40 @@ Color Scene::trace(Ray const &ray)
     *        pow(a,b)           a to the power of b
     ****************************************************/
 
-//    Color color = material.color;                  // place holder
+    Color color = material.color;                  // place holder
 
-//    Triple I_a = color.operator*(material.ka);
-//    Triple I_d = Triple();
-//    Triple I_s = Triple();
+    Triple I_a = color * material.ka;
+    Triple I_d = Triple();
+    Triple I_s = Triple();
+
+    for (int i = 0; i < lights.size(); i++) {
+        Triple L = (lights[i]->position) - (hit);
+        L.normalize();
+        I_d += (lights[i]->color) * max(0.0, N.dot(L));
+
+        double s = N.dot(L)*2;
+        Triple R = (N*s) - L;
+        R.normalize();
+
+        double m = max(0.0, R.dot(V));
+        I_s += lights[i]->color * pow(m, material.n);
+    }
+    I_d = I_d * (material.kd) * (material.color);
+    I_s = I_s * (material.ks);
+    Triple sum = I_a + I_d + I_s;
+    //sum = I_s;
+    return sum;
+
+//    Color I_d = Color(0.0, 0.0, 0.0);
 
 //    for (int i =0; i < lights.size(); i++) {
 //        Triple L = (lights[i]->position) - (hit);
-//        L.normalize();
-//        I_d += (lights[i]->color) * max(0.0, N.dot(L));
-
-//        double s = N.dot(L) * 2;
-//        Triple R = (N*s) - L;
-//        R.normalize();
-//        double m = max(0.0, R.dot(V));
-//        I_s += lights[i]->color * pow(m, material.n);
+//        L = L.normalized();
+//        I_d += max(0.0, N.dot(L)) *(lights[i]->color);
 //    }
-//    I_d = I_d * (material.kd) * (material.color);
-//    I_s = I_s * (material.ks) * (material.color);
-//    Triple sum = I_a + I_d + I_s;
-//    sum = I_d;
-//    return sum;
+//    I_d = (material.kd) * I_d * (material.color);
 
-    Color I_d = Color(0.0, 0.0, 0.0);
-
-    for (int i =0; i < lights.size(); i++) {
-        Triple L = (lights[i]->position) - (hit);
-        L = L.normalized();
-        I_d += max(0.0, N.dot(L)) *(lights[i]->color);
-    }
-    I_d = (material.kd) * I_d * (material.color);
-
-    return I_d;
-
-
+//    return I_d;
 
 }
 
