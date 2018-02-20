@@ -190,7 +190,7 @@ void MainView::matrixInit()
     translation_cube = QMatrix4x4();
 //    translation_cube.translate(QVector3D(2,0,-6));
     translation_cube.translate(QVector3D(0.5,0,0));
-    // Pyramid to -2,0,−6
+//     Pyramid to -2,0,−6
     translation_pyramid = QMatrix4x4();
 //    translation_pyramid.translate(QVector3D(-2,0,-6));
     translation_pyramid.translate(QVector3D(-0.5,0,0));
