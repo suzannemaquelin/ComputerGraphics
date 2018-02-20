@@ -19,5 +19,6 @@ void main()
 {
     // gl_Position is the output (a vec4) of the vertex shader
     gl_Position = perspective * translation * scale * rotation * vec4(vertCoordinates_in, 1.0);
+//    gl_Position = vec4(vertCoordinates_in, 1.0) * perspective * translation * rotation * scale;
     vertColor = vertColor_in;
 }
