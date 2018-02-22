@@ -129,6 +129,12 @@
       <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/sphere.h">
          <Option target="ray"/>
       </Unit>
+      <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.cpp">
+         <Option target="ray"/>
+      </Unit>
+      <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h">
+         <Option target="ray"/>
+      </Unit>
       <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/triple.cpp">
          <Option target="ray"/>
       </Unit>

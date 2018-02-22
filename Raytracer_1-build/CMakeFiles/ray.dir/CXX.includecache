@@ -460,6 +460,12 @@ cmath
 ../object.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/object.h
 
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.cpp
+triangle.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h
+cmath
+-
+
 /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h
 ../object.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/object.h

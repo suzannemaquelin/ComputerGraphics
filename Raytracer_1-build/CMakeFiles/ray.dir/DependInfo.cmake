@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/s2696320/Documents/CG/Raytracer_1/Code/scene.cpp" "/home/s2696320/Documents/CG/Raytracer_1-build/CMakeFiles/ray.dir/Code/scene.cpp.o"
   "/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/example.cpp" "/home/s2696320/Documents/CG/Raytracer_1-build/CMakeFiles/ray.dir/Code/shapes/example.cpp.o"
   "/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/sphere.cpp" "/home/s2696320/Documents/CG/Raytracer_1-build/CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o"
+  "/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.cpp" "/home/s2696320/Documents/CG/Raytracer_1-build/CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o"
   "/home/s2696320/Documents/CG/Raytracer_1/Code/triple.cpp" "/home/s2696320/Documents/CG/Raytracer_1-build/CMakeFiles/ray.dir/Code/triple.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

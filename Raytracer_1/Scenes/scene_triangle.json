@@ -10,12 +10,26 @@
         {
             "type": "triangle",
             "comment": "Blue triangle",
-            "vertex1": [10, 10, 10],
-	    "vertex2": [100, 10, 10],
-	    "vertex3": [100, 100, 10],
+            "vertex1": [40, 370, 110],
+	    "vertex2": [140, 270, 100],
+	    "vertex3": [90, 320, 105],
             "material":
             {
                 "color": [0.0, 0.0, 1.0],
+                "ka": 0.2,
+                "kd": 0.7,
+                "ks": 0.5,
+                "n": 64
+            }
+        },        {
+            "type": "triangle",
+            "comment": "Red triangle",
+            "vertex1": [40, 370, 90],
+	    "vertex2": [140, 270, 100],
+	    "vertex3": [90, 320, 95],
+            "material":
+            {
+                "color": [1.0, 0.0, 0.0],
                 "ka": 0.2,
                 "kd": 0.7,
                 "ks": 0.5,
