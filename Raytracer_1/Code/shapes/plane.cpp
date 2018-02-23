@@ -26,6 +26,7 @@ Hit Plane::intersect(Ray const &ray)
 
     double t;
     Vector N = Triple(a,b,c);
+    N.normalize();
 
     double denom = N.dot(ray_direction);
     if (denom < 1e-6) {
