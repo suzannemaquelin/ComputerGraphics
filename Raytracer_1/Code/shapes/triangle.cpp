@@ -51,6 +51,7 @@ Hit Triangle::intersect(Ray const &ray)
     edge2 = vertex3 - vertex1;
 
     Triple N = edge1.cross(edge2);
+    //N.normalize();
     h = ray_direction.cross(edge2);
     a = edge1.dot(h);
 
@@ -80,7 +81,7 @@ Hit Triangle::intersect(Ray const &ray)
         return Hit::NO_HIT();
 }
 
-Triangle::Triangle(Point v1, Point v2, Point v3)
+Triangle::Triangle(Point const &v1, Point const &v2, Point const &v3)
 :
     vertex1(v1),
     vertex2(v2),

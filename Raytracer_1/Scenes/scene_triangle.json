@@ -8,11 +8,39 @@
     ],
     "Objects": [
         {
+            "type": "sphere",
+            "comment": "Green sphere",
+            "position": [210, 270, 300],
+            "radius": 50,
+            "material":
+            {
+                "color": [0.0, 1.0, 0.0],
+                "ka": 0.2,
+                "kd": 0.3,
+                "ks": 0.5,
+                "n": 8
+            }
+        },	{
             "type": "triangle",
             "comment": "Blue triangle",
             "vertex1": [40, 370, 110],
 	    "vertex2": [140, 270, 100],
-	    "vertex3": [90, 320, 105],
+	    "vertex3": [120, 320, 80],
+            "material":
+            {
+                "color": [0.0, 0.0, 1.0],
+                "ka": 0.2,
+                "kd": 0.7,
+                "ks": 0.5,
+                "n": 64
+            }
+        },	{
+            "type": "quad",
+            "comment": "Blue quad",
+            "vertex1": [40, 370, 80],
+	    "vertex2": [40, 200, 90],
+	    "vertex3": [400, 370, 100],
+	    "vertex4": [400, 200, 110],
             "material":
             {
                 "color": [0.0, 0.0, 1.0],
@@ -36,6 +64,6 @@
                 "n": 64
             }
         }
-      
+
     ]
 }

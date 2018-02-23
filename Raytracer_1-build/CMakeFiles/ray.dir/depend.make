@@ -36,6 +36,7 @@ CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/raytracer.cpp
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/raytracer.h
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/scene.h
+CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.h
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/sphere.h
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: /home/s2696320/Documents/CG/Raytracer_1/Code/triple.h

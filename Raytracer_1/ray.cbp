@@ -107,6 +107,12 @@
       <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/example.h">
          <Option target="ray"/>
       </Unit>
+      <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.cpp">
+         <Option target="ray"/>
+      </Unit>
+      <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.h">
+         <Option target="ray"/>
+      </Unit>
       <Unit filename="/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/sphere.cpp">
          <Option target="ray"/>
       </Unit>

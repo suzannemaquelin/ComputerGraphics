@@ -452,6 +452,12 @@ cmath
 ../object.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/object.h
 
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.cpp
+plane.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.h
+cmath
+-
+
 /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.h
 ../object.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/object.h

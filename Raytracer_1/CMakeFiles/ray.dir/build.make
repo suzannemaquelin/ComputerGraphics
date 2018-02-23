@@ -201,9 +201,33 @@ CMakeFiles/ray.dir/Code/scene.cpp.o.provides: CMakeFiles/ray.dir/Code/scene.cpp.
 CMakeFiles/ray.dir/Code/scene.cpp.o.provides.build: CMakeFiles/ray.dir/Code/scene.cpp.o
 
 
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.o: CMakeFiles/ray.dir/flags.make
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.o: Code/shapes/plane.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ray.dir/Code/shapes/plane.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ray.dir/Code/shapes/plane.cpp.o -c /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.cpp
+
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ray.dir/Code/shapes/plane.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.cpp > CMakeFiles/ray.dir/Code/shapes/plane.cpp.i
+
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ray.dir/Code/shapes/plane.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.cpp -o CMakeFiles/ray.dir/Code/shapes/plane.cpp.s
+
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.requires:
+
+.PHONY : CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.requires
+
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.provides: CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.provides.build
+.PHONY : CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.provides
+
+CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.provides.build: CMakeFiles/ray.dir/Code/shapes/plane.cpp.o
+
+
 CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o: CMakeFiles/ray.dir/flags.make
 CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o: Code/shapes/sphere.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o -c /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/sphere.cpp
 
 CMakeFiles/ray.dir/Code/shapes/sphere.cpp.i: cmake_force
@@ -227,7 +251,7 @@ CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o.provides.build: CMakeFiles/ray.dir/C
 
 CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o: CMakeFiles/ray.dir/flags.make
 CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o: Code/shapes/triangle.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o -c /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.cpp
 
 CMakeFiles/ray.dir/Code/shapes/triangle.cpp.i: cmake_force
@@ -251,7 +275,7 @@ CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o.provides.build: CMakeFiles/ray.dir
 
 CMakeFiles/ray.dir/Code/shapes/example.cpp.o: CMakeFiles/ray.dir/flags.make
 CMakeFiles/ray.dir/Code/shapes/example.cpp.o: Code/shapes/example.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/ray.dir/Code/shapes/example.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/ray.dir/Code/shapes/example.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ray.dir/Code/shapes/example.cpp.o -c /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/example.cpp
 
 CMakeFiles/ray.dir/Code/shapes/example.cpp.i: cmake_force
@@ -275,7 +299,7 @@ CMakeFiles/ray.dir/Code/shapes/example.cpp.o.provides.build: CMakeFiles/ray.dir/
 
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: CMakeFiles/ray.dir/flags.make
 CMakeFiles/ray.dir/Code/raytracer.cpp.o: Code/raytracer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/ray.dir/Code/raytracer.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/ray.dir/Code/raytracer.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ray.dir/Code/raytracer.cpp.o -c /home/s2696320/Documents/CG/Raytracer_1/Code/raytracer.cpp
 
 CMakeFiles/ray.dir/Code/raytracer.cpp.i: cmake_force
@@ -305,6 +329,7 @@ ray_OBJECTS = \
 "CMakeFiles/ray.dir/Code/objloader.cpp.o" \
 "CMakeFiles/ray.dir/Code/lode/lodepng.cpp.o" \
 "CMakeFiles/ray.dir/Code/scene.cpp.o" \
+"CMakeFiles/ray.dir/Code/shapes/plane.cpp.o" \
 "CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o" \
 "CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o" \
 "CMakeFiles/ray.dir/Code/shapes/example.cpp.o" \
@@ -319,13 +344,14 @@ ray: CMakeFiles/ray.dir/Code/main.cpp.o
 ray: CMakeFiles/ray.dir/Code/objloader.cpp.o
 ray: CMakeFiles/ray.dir/Code/lode/lodepng.cpp.o
 ray: CMakeFiles/ray.dir/Code/scene.cpp.o
+ray: CMakeFiles/ray.dir/Code/shapes/plane.cpp.o
 ray: CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o
 ray: CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o
 ray: CMakeFiles/ray.dir/Code/shapes/example.cpp.o
 ray: CMakeFiles/ray.dir/Code/raytracer.cpp.o
 ray: CMakeFiles/ray.dir/build.make
 ray: CMakeFiles/ray.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable ray"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/s2696320/Documents/CG/Raytracer_1/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable ray"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ray.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -339,6 +365,7 @@ CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/main.cpp.o.requires
 CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/objloader.cpp.o.requires
 CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/lode/lodepng.cpp.o.requires
 CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/scene.cpp.o.requires
+CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/shapes/plane.cpp.o.requires
 CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/shapes/sphere.cpp.o.requires
 CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/shapes/triangle.cpp.o.requires
 CMakeFiles/ray.dir/requires: CMakeFiles/ray.dir/Code/shapes/example.cpp.o.requires

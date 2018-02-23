@@ -312,6 +312,33 @@ Code/shapes/example.cpp.s:
 	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/example.cpp.s
 .PHONY : Code/shapes/example.cpp.s
 
+Code/shapes/plane.o: Code/shapes/plane.cpp.o
+
+.PHONY : Code/shapes/plane.o
+
+# target to build an object file
+Code/shapes/plane.cpp.o:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.o
+.PHONY : Code/shapes/plane.cpp.o
+
+Code/shapes/plane.i: Code/shapes/plane.cpp.i
+
+.PHONY : Code/shapes/plane.i
+
+# target to preprocess a source file
+Code/shapes/plane.cpp.i:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.i
+.PHONY : Code/shapes/plane.cpp.i
+
+Code/shapes/plane.s: Code/shapes/plane.cpp.s
+
+.PHONY : Code/shapes/plane.s
+
+# target to generate assembly for a file
+Code/shapes/plane.cpp.s:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.s
+.PHONY : Code/shapes/plane.cpp.s
+
 Code/shapes/sphere.o: Code/shapes/sphere.cpp.o
 
 .PHONY : Code/shapes/sphere.o
@@ -423,6 +450,9 @@ help:
 	@echo "... Code/shapes/example.o"
 	@echo "... Code/shapes/example.i"
 	@echo "... Code/shapes/example.s"
+	@echo "... Code/shapes/plane.o"
+	@echo "... Code/shapes/plane.i"
+	@echo "... Code/shapes/plane.s"
 	@echo "... Code/shapes/sphere.o"
 	@echo "... Code/shapes/sphere.i"
 	@echo "... Code/shapes/sphere.s"
