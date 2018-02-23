@@ -12,6 +12,7 @@
 #include "shapes/sphere.h"
 #include "shapes/triangle.h"
 #include "shapes/plane.h"
+#include "shapes/quad.h"
 
 // =============================================================================
 // -- End of shape includes ----------------------------------------------------
@@ -50,6 +51,12 @@ bool Raytracer::parseObjectNode(json const &node)
         float c(node["c"]);
         float d(node["d"]);
         obj = ObjectPtr(new Plane(a, b, c, d));
+    } else if(node["type"] == "quad") {
+        Point vertex1(node["vertex1"]);
+        Point vertex2(node["vertex2"]);
+        Point vertex3(node["vertex3"]);
+        Point vertex4(node["vertex4"]);
+        obj = ObjectPtr(new Quad(vertex1, vertex2, vertex3, vertex4));
     }
     else
     {

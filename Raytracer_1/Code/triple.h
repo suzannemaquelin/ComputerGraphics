@@ -75,6 +75,11 @@ class Triple
         Triple normalized() const;              // normalized COPY
         void normalize();                       // normalize THIS
 
+        //distance between two vectors
+        double distance(Triple const &t) const;
+
+        int equals(Triple const &t) const;
+
 // --- Color functions ---------------------------------------------------------
 
         void set(double f);                     // set all values to f

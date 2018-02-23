@@ -399,6 +399,8 @@ shapes/triangle.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h
 shapes/plane.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.h
+shapes/quad.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/quad.h
 json/json.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/json/json.h
 exception
@@ -461,6 +463,20 @@ cmath
 /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/plane.h
 ../object.h
 /home/s2696320/Documents/CG/Raytracer_1/Code/object.h
+
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/quad.cpp
+quad.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/quad.h
+triangle.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h
+cmath
+-
+
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/quad.h
+../object.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/object.h
+triangle.h
+/home/s2696320/Documents/CG/Raytracer_1/Code/shapes/triangle.h
 
 /home/s2696320/Documents/CG/Raytracer_1/Code/shapes/sphere.cpp
 sphere.h

@@ -10,9 +10,9 @@ class Triangle: public Object
 
         virtual Hit intersect(Ray const &ray);
 
-        Point const vertex1;
-        Point const vertex2;
-        Point const vertex3;
+        Point vertex1;
+        Point vertex2;
+        Point vertex3;
 };
 
 #endif

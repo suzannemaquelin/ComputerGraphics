@@ -164,6 +164,18 @@ void Triple::normalize()
     z *= invlen;
 }
 
+double Triple::distance(Triple const &t) const {
+    double dx = (x-t.x)*(x-t.x);
+    double dy = (y-t.y)*(y-t.y);
+    double dz = (z-t.z)*(z-t.z);
+    return sqrt(dx+dy+dz);
+}
+
+int Triple::equals(Triple const &t) const {
+    if(x == t.x && y == t.y && z == t.z) return 1;
+    else return 0;
+}
+
 // --- Color functions ---------------------------------------------------------
 
 void Triple::set(double f)

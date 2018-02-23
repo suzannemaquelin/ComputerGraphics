@@ -339,6 +339,33 @@ Code/shapes/plane.cpp.s:
 	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/plane.cpp.s
 .PHONY : Code/shapes/plane.cpp.s
 
+Code/shapes/quad.o: Code/shapes/quad.cpp.o
+
+.PHONY : Code/shapes/quad.o
+
+# target to build an object file
+Code/shapes/quad.cpp.o:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/quad.cpp.o
+.PHONY : Code/shapes/quad.cpp.o
+
+Code/shapes/quad.i: Code/shapes/quad.cpp.i
+
+.PHONY : Code/shapes/quad.i
+
+# target to preprocess a source file
+Code/shapes/quad.cpp.i:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/quad.cpp.i
+.PHONY : Code/shapes/quad.cpp.i
+
+Code/shapes/quad.s: Code/shapes/quad.cpp.s
+
+.PHONY : Code/shapes/quad.s
+
+# target to generate assembly for a file
+Code/shapes/quad.cpp.s:
+	$(MAKE) -f CMakeFiles/ray.dir/build.make CMakeFiles/ray.dir/Code/shapes/quad.cpp.s
+.PHONY : Code/shapes/quad.cpp.s
+
 Code/shapes/sphere.o: Code/shapes/sphere.cpp.o
 
 .PHONY : Code/shapes/sphere.o
@@ -453,6 +480,9 @@ help:
 	@echo "... Code/shapes/plane.o"
 	@echo "... Code/shapes/plane.i"
 	@echo "... Code/shapes/plane.s"
+	@echo "... Code/shapes/quad.o"
+	@echo "... Code/shapes/quad.i"
+	@echo "... Code/shapes/quad.s"
 	@echo "... Code/shapes/sphere.o"
 	@echo "... Code/shapes/sphere.i"
 	@echo "... Code/shapes/sphere.s"

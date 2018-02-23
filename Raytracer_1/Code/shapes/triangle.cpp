@@ -51,7 +51,9 @@ Hit Triangle::intersect(Ray const &ray)
     edge2 = vertex3 - vertex1;
 
     Triple N = edge1.cross(edge2);
-    //N.normalize();
+    N.normalize();
+
+
     h = ray_direction.cross(edge2);
     a = edge1.dot(h);
 
@@ -71,10 +73,14 @@ Hit Triangle::intersect(Ray const &ray)
         return Hit::NO_HIT();
     // At this stage we can compute t to find out where the intersection point is on the line.
     float t = f * edge2.dot(q);
+
     if (t > EPSILON) // ray intersection
     {
         //outIntersectionPoint = ray_origin + ray_direction * t;
-        printf("t: %lf\n", t);
+        N.z = abs(N.z);
+        fprintf(stderr, "printing the normal vector: %lf, %lf, %lf\n", N.x, N.y, N.z);
+        //fprintf(stderr, "distance between ray and triangle: %lf\n", t);
+
         return Hit(t,N);
     }
     else // This means that there is a line intersection but not a ray intersection.
