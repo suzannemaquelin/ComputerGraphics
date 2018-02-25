@@ -1,11 +1,4 @@
-# Raytracer C++ framework for Introduction to Computer Graphics
 
-This is a C++ framework for a raytracer. It is created for the Computer
-Science course "Introduction to Computer Graphics" taught at the
-University of Groningen.
-
-This framework is inspired by and uses (some) code of the raytracer framework of
-Bert Freudenberg which unfortunately is no longer available.
 
 ## Changes made in raytracer source files:
 To the `shape` directory, we added the files
@@ -15,6 +8,17 @@ To the `shape` directory, we added the files
 We edited the file `triple.cpp` to include the functions distance and equals.
 We edited the file `sphere.cpp` to correctly implement the function intersect
 We implemented phong ilumination in the class `scene.cpp`
+
+
+
+# Raytracer C++ framework for Introduction to Computer Graphics
+
+This is a C++ framework for a raytracer. It is created for the Computer
+Science course "Introduction to Computer Graphics" taught at the
+University of Groningen.
+
+This framework is inspired by and uses (some) code of the raytracer framework of
+Bert Freudenberg which unfortunately is no longer available.
 
 ## Compiling the code
 
