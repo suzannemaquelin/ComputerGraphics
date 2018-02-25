@@ -22,20 +22,18 @@ Hit Sphere::intersect(Ray const &ray)
     * intersection point from the ray origin in *t (see example).
     ****************************************************/
     double t;
-    Triple c = this->position;
-    double r = this->r;
-    Triple o = ray.O;
-    Triple l = ray.D;
+    Triple center = position;
+    Triple dir = ray.D;
+    Triple oc = ray.O - center;
 
-    double term1 = l.dot(o.operator-(c));
-    double term2 = (o.operator-(c)).length_2();
+    double term1 = dir.dot(ray.O - center);
+    double term2 = (ray.O - center).length_2();
     double discriminant = term1*term1 - term2 + r*r;
 
     if (discriminant < 0) {
         return Hit::NO_HIT();
     }
 
-//    t = min(-term1 + sqrt(discriminant), -term1 - sqrt(discriminant));
     t = -term1 - sqrt(discriminant);
 
     /****************************************************
@@ -47,8 +45,8 @@ Hit Sphere::intersect(Ray const &ray)
     * Insert calculation of the sphere's normal at the intersection point.
     ****************************************************/
 
-    Triple intersection = o +(l * t);
-    Vector N = intersection - c;
+    Triple intersection = ray.O +(dir * t);
+    Vector N = intersection - center;
     N.normalize();
 
     return Hit(t,N);

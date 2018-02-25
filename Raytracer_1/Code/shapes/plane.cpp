@@ -19,10 +19,12 @@ Hit Plane::intersect(Ray const &ray)
     }
 
     double denom = N.dot(ray_direction);
-    if (denom < 1e-6 & denom > -1e-6) {
+    //If the denominator is zero, the normal vector and ray direction will be perpendicular, thus no light hits the plane
+    if (denom < 1e-6 && denom > -1e-6) {
         return Hit::NO_HIT();
     }
 
+    //calculation of distance between origin of ray and intersection point
     t = - (N.dot(ray_origin) + d) / denom;
 
     return Hit(t, N);

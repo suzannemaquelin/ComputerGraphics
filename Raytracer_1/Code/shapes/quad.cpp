@@ -7,52 +7,34 @@ using namespace std;
 
 Hit Quad::intersect(Ray const &ray)
 {
-    /****************************************************
-    * RT1.1: INTERSECTION CALCULATION
-    *
-    * Given: ray, position, r
-    * Sought: intersects? if true: *t
-    *
-    * Insert calculation of ray/sphere intersection here.
-    *
-    * You have the sphere's center (C) and radius (r) as well as
-    * the ray's origin (ray.O) and direction (ray.D).
-    *
-    * If the ray does not intersect the sphere, return false.
-    * Otherwise, return true and place the distance of the
-    * intersection point from the ray origin in *t (see example).
-    ****************************************************/
-
+    /**
+     * In order to draw a quad, we divide the quad into 2 triangles and compute the intersection
+     * To find out which vertices we need for the 2 triangles we take the vertex 1 and compute which
+     * vertex lies farthest from vertex 1. We will make a triangle not including this point and we will
+     * make a second triangle including this point and the two vertices which lie nearest to it.
+     */
     Triangle t1 = Triangle(v1, v2, v3);
     Triangle t2 = Triangle(v1, v2, v3);
-    Point furthest_v1 = function(v1, v2, v3, v4);
-//    fprintf(stderr, "furthest from v1: %lf, %lf, %lf\n", furthest_v1.x, furthest_v1.y, furthest_v1.z);
+
+    Point furthest_v1 = furthest_point(v1, v2, v3, v4);
+
+    t1 = take_nearest(furthest_v1, v1, v2, v3, v4);
+
     if(furthest_v1.equals(v2)){
-        t1 = Triangle(v1, v3, v4);
-        Point furthest_v2 = function(v2, v1, v3, v4);
-        if(furthest_v2.equals(v1)) t2 = Triangle(v2, v3, v4);
-        else if(furthest_v2.equals(v3)) t2 = Triangle(v2, v1, v4);
-        else t2 = Triangle(v2, v1, v3);
+        Point furthest_v2 = furthest_point(v2, v1, v3, v4);
+        t2 = take_nearest(furthest_v2, v2, v1, v3, v4);
     } else if(furthest_v1.equals(v3)){
-        t1 = Triangle(v1, v2, v4);
-        Point furthest_v3 = function(v3, v1, v2, v4);
-        if(furthest_v3.equals(v1)) t2 = Triangle(v3, v2, v4);
-        else if(furthest_v3.equals(v2)) t2 = Triangle(v3, v1, v4);
-        else t2 = Triangle(v3, v1, v2);
+        Point furthest_v3 = furthest_point(v3, v1, v2, v4);
+        t2 = take_nearest(furthest_v3, v3, v1, v2, v4);
     } else {
-        t1 = Triangle(v1, v2, v3);
-        Point furthest_v4 = function(v4, v1, v2, v3);
-        if(furthest_v4.equals(v1)) t2 = Triangle(v4, v2, v3);
-        else if(furthest_v4.equals(v2)) t2 = Triangle(v4, v1, v3);
-        else t2 = Triangle(v4, v1, v2);
+        Point furthest_v4 = furthest_point(v4, v1, v2, v3);
+        t2 = take_nearest(furthest_v4, v4, v1, v2, v3);
     }
 
     Hit h1 = t1.intersect(ray);
     Hit h2 = t2.intersect(ray);
-//    if( h1.NO_HIT() && h2.NO_HIT()) return h1;
-//    if (h1.NO_HIT()) return h2;
-//    return h1;
 
+    //Find out if t1 or t2 is being hit by the light
     if ( !isnan(h1.t)) {
         return h1;
     }
@@ -63,7 +45,8 @@ Hit Quad::intersect(Ray const &ray)
     return Hit::NO_HIT();
 }
 
-Point Quad::function(Point const &v1, Point const &v2, Point const &v3, Point const &v4)
+//furthest_point takes 4 points as input and computes which of point lies furthest from the first given point
+Point Quad::furthest_point(Point const &v1, Point const &v2, Point const &v3, Point const &v4)
 {
     double distance12 = v1.distance(v2);
     double distance13 = v1.distance(v3);
@@ -79,6 +62,18 @@ Point Quad::function(Point const &v1, Point const &v2, Point const &v3, Point co
     else {
         return v4;
     }
+}
+
+//This function takes the nearest two points to the triangle point and returns this triangle
+Triangle Quad::take_nearest(Point furthest, Point triangle_point, Point p1, Point p2, Point p3) {
+    if(furthest.equals(p1)) {
+        return Triangle(triangle_point, p2, p3);
+    } else if(furthest.equals(p2)) {
+        return Triangle(triangle_point, p1, p3);
+    } else {
+        return Triangle(triangle_point, p1, p2);
+    }
+
 }
 
 Quad::Quad(Point const &v1, Point const &v2, Point const &v3, Point const &v4)

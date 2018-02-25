@@ -36,26 +36,12 @@ Color Scene::trace(Ray const &ray)
     /****************************************************
     * This is where you should insert the color
     * calculation (Phong model).
-    *
-    * Given: material, hit, N, V, lights[]
-    * Sought: color
-    *
-    * Hints: (see triple.h)
-    *        Triple.dot(Vector) dot product
-    *        Vector + Vector    vector sum
-    *        Vector - Vector    vector difference
-    *        Point - Point      yields vector
-    *        Vector.normalize() normalizes vector, returns length
-    *        double * Color     scales each color component (r,g,b)
-    *        Color * Color      dito
-    *        pow(a,b)           a to the power of b
     ****************************************************/
 
-    Color color = material.color;                  // place holder
+    Color color = material.color;
 
     Triple I_a = color * material.ka;
-    Triple I_d = Triple();
-    Triple I_s = Triple();
+    Triple I_d, I_s;
 
     for (int i = 0; i < lights.size(); i++) {
         Triple L = (lights[i]->position) - (hit);
@@ -71,21 +57,7 @@ Color Scene::trace(Ray const &ray)
     }
     I_d = I_d * (material.kd) * (material.color);
     I_s = I_s * (material.ks);
-    Triple sum = I_a + I_d + I_s;
-    //sum = I_s;
-    return sum;
-
-//    Color I_d = Color(0.0, 0.0, 0.0);
-
-//    for (int i =0; i < lights.size(); i++) {
-//        Triple L = (lights[i]->position) - (hit);
-//        L = L.normalized();
-//        I_d += max(0.0, N.dot(L)) *(lights[i]->color);
-//    }
-//    I_d = (material.kd) * I_d * (material.color);
-
-//    return I_d;
-
+    return I_a + I_d + I_s;
 }
 
 void Scene::render(Image &img)
