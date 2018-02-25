@@ -25,25 +25,6 @@ Hit Triangle::intersect(Ray const &ray)
     Triple ray_origin = ray.O;
     Triple ray_direction = ray.D;
 
-//    Triple v1v2 = vertex2 - vertex1;
-//    Triple v1v3 = vertex3 - vertex1;
-//    Triple N = v1v2.cross(v1v3);
-
-
-//    // check if ray and plane are perpendicular ?
-//    float dot_N_l = N.dot(ray_direction);
-//    if (dot_N_l == 0) {
-//        return Hit::NO_HIT();
-//    }
-
-//    //distance from the origin (0, 0, 0)
-//    //to the plane (if we trace a line from the origin to the plane, parallel to the plane's normal)
-//    float d = N.dot(vertex1);
-//    t = (N.dot(ray_origin) + d) / dot_N_l;
-
-//    return Hit(t,N);
-
-
     const float EPSILON = 0.0000001;
     Triple edge1, edge2, h, s, q;
     float a,f,u,v;
@@ -76,10 +57,11 @@ Hit Triangle::intersect(Ray const &ray)
 
     if (t > EPSILON) // ray intersection
     {
-        //outIntersectionPoint = ray_origin + ray_direction * t;
-        N.z = abs(N.z);
+        //make sure that the angle between the normal and the incoming ray is less than 90 degrees
+        if (N.dot(ray_direction)>0) {
+            N = Triple(-1,-1,-1) * N;
+        }
         fprintf(stderr, "printing the normal vector: %lf, %lf, %lf\n", N.x, N.y, N.z);
-        //fprintf(stderr, "distance between ray and triangle: %lf\n", t);
 
         return Hit(t,N);
     }
