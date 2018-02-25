@@ -6,21 +6,6 @@ using namespace std;
 
 Hit Plane::intersect(Ray const &ray)
 {
-    /****************************************************
-    * RT1.1: INTERSECTION CALCULATION
-    *
-    * Given: ray, position, r
-    * Sought: intersects? if true: *t
-    *
-    * Insert calculation of ray/sphere intersection here.
-    *
-    * You have the sphere's center (C) and radius (r) as well as
-    * the ray's origin (ray.O) and direction (ray.D).
-    *
-    * If the ray does not intersect the sphere, return false.
-    * Otherwise, return true and place the distance of the
-    * intersection point from the ray origin in *t (see example).
-    ****************************************************/
     Triple ray_origin = ray.O;
     Triple ray_direction = ray.D;
 
@@ -28,15 +13,15 @@ Hit Plane::intersect(Ray const &ray)
     Vector N = Triple(a,b,c);
     N.normalize();
 
-    double denom = N.dot(ray_direction);
-    if (denom < 1e-6) {
-    //Vec3f p0l0 = p0 - l0;
-    //t = dotProduct(p0l0, n) / denom;
-    //return (t >= 0);
-        return Hit::NO_HIT();
+    //The degree between the normal and the vector ray direction should be larger than 90 degrees
+    if (N.dot(ray_direction) > 0) {
+        N = Triple(-1,-1,-1) * N;
     }
 
-    //return false;
+    double denom = N.dot(ray_direction);
+    if (denom < 1e-6 & denom > -1e-6) {
+        return Hit::NO_HIT();
+    }
 
     t = - (N.dot(ray_origin) + d) / denom;
 

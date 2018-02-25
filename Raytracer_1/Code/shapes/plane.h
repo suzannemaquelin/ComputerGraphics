@@ -1,4 +1,4 @@
-#ifndef PANE_H_
+#ifndef PLANE_H_
 #define PLANE_H_
 
 #include "../object.h"
