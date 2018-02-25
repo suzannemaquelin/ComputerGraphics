@@ -7,6 +7,15 @@ University of Groningen.
 This framework is inspired by and uses (some) code of the raytracer framework of
 Bert Freudenberg which unfortunately is no longer available.
 
+## Changes made in raytracer source files:
+To the `shape` directory, we added the files
+*`triangle.cpp/.h`: Triangle class, which is a subclass of the `Object` class. Represents a triangle in the scene.
+*`quad.cpp/.h`: Quad class, which is a subclass of the `Object` class. Represents a quad in the scene in the form of 2 triangles.
+*`plane.cpp/.h`: Plane class, which is a subclass of the `Object` class. Represents a plane in the scene.
+We edited the file `triple.cpp` to include the functions distance and equals.
+We edited the file `sphere.cpp` to correctly implement the function intersect
+We implemented phong ilumination in the class `scene.cpp`
+
 ## Compiling the code
 
 We provided a [CMakeLists.txt](CMakeLists.txt) file to be used with `cmake`.
