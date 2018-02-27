@@ -188,16 +188,13 @@ void MainView::matrixInit()
 // Translations
     // Cube to 2,0,−6
     translation_cube = QMatrix4x4();
-//    translation_cube.translate(QVector3D(2,0,-6));
-    translation_cube.translate(QVector3D(0.5,0,0));
+    translation_cube.translate(QVector3D(2,0,-6));
 //     Pyramid to -2,0,−6
     translation_pyramid = QMatrix4x4();
-//    translation_pyramid.translate(QVector3D(-2,0,-6));
-    translation_pyramid.translate(QVector3D(-0.5,0,0));
+    translation_pyramid.translate(QVector3D(-2,0,-6));
     // Sphere to 0,0,−10
     translation_sphere = QMatrix4x4();
-//    translation_sphere.translate(QVector3D(0,0,-10));
-    translation_sphere.translate(QVector3D(0,0,0));
+    translation_sphere.translate(QVector3D(0,0,-10));
 
 // Rotation/scale
     rotation = QMatrix4x4();
@@ -208,8 +205,7 @@ void MainView::matrixInit()
 // Perspective
     perspective = QMatrix4x4();
     aspect_ratio = (float) this->width()/ (float) this->height();
-
-    perspective.perspective(60, aspect_ratio, 1, 1);
+    perspective.perspective(60, aspect_ratio, 1, 100);
 }
 
 void MainView::createShaderProgram()
@@ -276,7 +272,8 @@ void MainView::paintGL() {
 void MainView::resizeGL(int newWidth, int newHeight) 
 {
     aspect_ratio = (float) newWidth / (float) newHeight;
-    perspective.perspective(60, aspect_ratio, 1, 1);
+    perspective.setToIdentity();
+    perspective.perspective(60, aspect_ratio, 1, 100);
     update();
 }
 
