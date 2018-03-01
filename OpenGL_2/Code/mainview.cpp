@@ -147,7 +147,8 @@ void MainView::paintGL() {
     // Clear the screen before rendering
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix3x3 normal_transforming = QMatrix3x3();
+    QMatrix3x3 normal_transforming = rotation.normalMatrix();
+    normal_transforming.setToIdentity();
 
     shaderProgram.bind();
 
@@ -158,10 +159,9 @@ void MainView::paintGL() {
 
     //Draw cat here
     glUniformMatrix4fv(shaderProgram.uniformLocation("translation"), 1, GL_FALSE, translation_cat.data());
-    glUniformMatrix4fv(shaderProgram.uniformLocation("scale"), 1, GL_FALSE, catScale.data());
+    glUniformMatrix4fv(shaderProgram.uniformLocation("normal_transformation"), 1, GL_FALSE, normal_transforming.data());
     glBindVertexArray(VAO_cat);
     glDrawArrays(GL_TRIANGLES,0,catVertices.length());
-
 
     shaderProgram.release();
 }

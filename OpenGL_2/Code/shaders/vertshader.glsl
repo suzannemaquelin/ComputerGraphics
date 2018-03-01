@@ -11,7 +11,8 @@ uniform mat4 translation;
 uniform mat4 perspective;
 uniform mat4 rotation;
 uniform mat4 scale;
-uniform mat4 x;
+
+uniform mat3 normal_transformation;
 
 // Specify the output of the vertex stage
 out vec3 vertColor;
@@ -21,5 +22,6 @@ void main()
     // gl_Position is the output (a vec4) of the vertex shader
     gl_Position = perspective * translation * scale * rotation * vec4(vertCoordinates_in, 1.0);
 //    gl_Position = vec4(vertCoordinates_in, 1.0) * perspective * translation * rotation * scale;
-    vertColor = vertColor_in;
+//    vertColor = vertColor_in;
+    vertColor = vertColor_in * normal_transformation;
 }
