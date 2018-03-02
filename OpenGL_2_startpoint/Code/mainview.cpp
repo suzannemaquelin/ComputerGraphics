@@ -78,17 +78,41 @@ void MainView::initializeGL() {
 
 void MainView::createShaderProgram()
 {
-    // Create shader program
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex,
-                                           ":/shaders/vertshader.glsl");
-    shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment,
-                                           ":/shaders/fragshader.glsl");
-    shaderProgram.link();
+    // Create normal shader program
+    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_normal.glsl");
+    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_normal.glsl");
+    shaderProgram_normal.link();
 
-    // Get the uniforms
-    uniformModelViewTransform = shaderProgram.uniformLocation("modelViewTransform");
-    uniformProjectionTransform = shaderProgram.uniformLocation("projectionTransform");
-    uniformNormal_transformation = shaderProgram.uniformLocation("normal_transformation");
+    // Create gouraud shader program
+    shaderProgram_gouraud.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_gouraud.glsl");
+    shaderProgram_gouraud.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_gouraud.glsl");
+    shaderProgram_gouraud.link();
+
+    // Create phong shader program
+    shaderProgram_phong.addShaderFromSourceFile(QOpenGLShader::Vertex,
+                                           ":/shaders/vertshader_phong.glsl");
+    shaderProgram_phong.addShaderFromSourceFile(QOpenGLShader::Fragment,
+                                           ":/shaders/fragshader_phong.glsl");
+    shaderProgram_phong.link();
+
+    // Get the uniforms of normal
+    uniformModelViewTransform_normal = shaderProgram_normal.uniformLocation("modelViewTransform");
+    uniformProjectionTransform_normal = shaderProgram_normal.uniformLocation("projectionTransform");
+    uniformNormal_transformation_normal = shaderProgram_normal.uniformLocation("normal_transformation");
+
+    // Get the uniforms of gouraud
+    uniformModelViewTransform_gouraud = shaderProgram_gouraud.uniformLocation("modelViewTransform");
+    uniformProjectionTransform_gouraud = shaderProgram_gouraud.uniformLocation("projectionTransform");
+    uniformNormal_transformation_gouraud = shaderProgram_gouraud.uniformLocation("normal_transformation");
+
+    // Get the uniforms of phong
+    uniformModelViewTransform_phong = shaderProgram_phong.uniformLocation("modelViewTransform");
+    uniformProjectionTransform_phong = shaderProgram_phong.uniformLocation("projectionTransform");
+    uniformNormal_transformation_phong = shaderProgram_phong.uniformLocation("normal_transformation");
 }
 
 void MainView::loadMesh()
@@ -150,22 +174,19 @@ void MainView::paintGL() {
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shaderProgram.bind();
-    qDebug() << "mesh transform" << meshTransform;
-
+    shaderProgram_phong.bind();
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
-    //qDebug() << normal_transforming;
 
     // Set the projection matrix
-    glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransform, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormal_transformation, 1, GL_FALSE, normal_transforming.data());
+    glUniformMatrix4fv(uniformProjectionTransform_phong, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransform_phong, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormal_transformation_phong, 1, GL_FALSE, normal_transforming.data());
 
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
-    shaderProgram.release();
+    shaderProgram_phong.release();
 }
 
 /**
