@@ -15,7 +15,10 @@ layout (location = 1) in vec3 vertNormal_in;
  uniform vec3 light_position;
  uniform vec3 light_intensity;
  uniform vec3 material_Ia;
- uniform vec4 material_k;
+ uniform vec3 material_kd;
+ uniform vec3 material_ka;
+ uniform vec3 material_ks;
+ uniform float phongExp;
 
 // Specify the output of the vertex stage
 out vec3 vertNormal;
@@ -31,13 +34,11 @@ void main()
     vec3 lightdir = normalize(light_pos.xyz - pos.xyz);
     vec3 half_2 = normalize(v + lightdir);
 
-    vec3 n = normalize(normal.xyz);
-    vec3 h = normalize(half_2);
-    vec3 l = normalize(lightdir);
+    vec3 n = normalize(normal);
 
-    vec3 intensity = material_k[0] * material_Ia
-            + material_k[1] * light_intensity * max( 0.0, dot(n, l) )
-            + material_k[2] * light_intensity
-            * pow( max( 0.0, dot(n, h) ), material_k[3]);
-    vertNormal = material_Ia;
+    vec3 intensity = material_ka * material_Ia
+            + material_kd * light_intensity * max( 0.0, dot(n, lightdir) )
+            + material_ks * light_intensity
+            * pow( max( 0.0, dot(n, half_2) ), phongExp);
+    vertNormal = intensity;
 }

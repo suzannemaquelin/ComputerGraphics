@@ -111,12 +111,22 @@ void MainView::createShaderProgram()
     uniformLightPosition = shaderProgram_gouraud.uniformLocation("light_position");
     uniformLightIntensity = shaderProgram_gouraud.uniformLocation("light_intensity");
     uniformMaterialIa = shaderProgram_gouraud.uniformLocation("material_Ia");
-    uniformMaterialK = shaderProgram_gouraud.uniformLocation("material_k");
+    uniformMaterial_ka = shaderProgram_gouraud.uniformLocation("material_ka");
+    uniformMaterial_kd = shaderProgram_gouraud.uniformLocation("material_kd");
+    uniformMaterial_ks = shaderProgram_gouraud.uniformLocation("material_ks");
+    uniformPhongExp = shaderProgram_gouraud.uniformLocation("phongExp");
 
     // Get the uniforms of phong
     uniformModelViewTransform_phong = shaderProgram_phong.uniformLocation("modelViewTransform");
     uniformProjectionTransform_phong = shaderProgram_phong.uniformLocation("projectionTransform");
     uniformNormal_transformation_phong = shaderProgram_phong.uniformLocation("normal_transformation");
+//    uniformLightPosition = shaderProgram_phong.uniformLocation("light_position");
+//    uniformLightIntensity = shaderProgram_phong.uniformLocation("light_intensity");
+//    uniformMaterialIa = shaderProgram_phong.uniformLocation("material_Ia");
+//    uniformMaterial_ka = shaderProgram_phong.uniformLocation("material_ka");
+//    uniformMaterial_kd = shaderProgram_phong.uniformLocation("material_kd");
+//    uniformMaterial_ks = shaderProgram_phong.uniformLocation("material_ks");
+//    uniformPhongExp = shaderProgram_phong.uniformLocation("phongExp");
 }
 
 void MainView::loadMesh()
@@ -182,9 +192,12 @@ void MainView::paintGL() {
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
     QVector3D light_position = QVector3D(1.0, 0.0, 0.0);
-    QVector3D light_intensity = QVector3D(1.0, 1.0, 1.0);
-    QVector3D material_Ia = QVector3D(0.0, 0.0, 1.0);
-    QVector4D material_k = QVector4D(0.2, 0.7, 0.5, 64);
+    QVector3D light_intensity = QVector3D(0.0, 0.0, 1.0);
+    QVector3D material_Ia = QVector3D(1.0, 1.0, 1.0);
+    QVector3D material_kd = QVector3D(0.1, 0.5, 0.8);
+    QVector3D material_ka = QVector3D(0.7, 0.7, 0.7);
+    QVector3D material_ks = QVector3D(1.0, 1.0, 1.0);
+    float phongExp = 32.0;
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_gouraud, 1, GL_FALSE, projectionTransform.data());
@@ -193,7 +206,10 @@ void MainView::paintGL() {
     glUniform3f(uniformLightPosition, light_position[0], light_position[1], light_position[2]);
     glUniform3f(uniformLightIntensity, light_intensity[0], light_intensity[1], light_intensity[2]);
     glUniform3f(uniformMaterialIa, material_Ia[0], material_Ia[1], material_Ia[2]);
-    glUniform4f(uniformMaterialK, material_k[0], material_k[1], material_k[2], material_k[3]);
+    glUniform3f(uniformMaterial_kd, material_kd[0], material_kd[1], material_kd[2]);
+    glUniform3f(uniformMaterial_ka, material_ka[0], material_ka[1], material_ka[2]);
+    glUniform3f(uniformMaterial_ks, material_ks[0], material_ks[1], material_ks[2]);
+    glUniform1f(uniformPhongExp, phongExp);
 
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
@@ -226,7 +242,7 @@ void MainView::updateProjectionTransform()
 void MainView::updateModelTransforms()
 {
     meshTransform.setToIdentity();
-    meshTransform.translate(0, 0, -2);
+    meshTransform.translate(0, -0.2, -1);
     meshTransform.scale(scale);
     meshTransform.rotate(QQuaternion::fromEulerAngles(rotation));
 

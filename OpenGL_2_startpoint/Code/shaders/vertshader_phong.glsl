@@ -12,12 +12,22 @@ layout (location = 1) in vec3 vertNormal_in;
  uniform mat4 projectionTransform;
  uniform mat3 normal_transformation;
 
+ uniform vec3 light_position;
+ uniform vec3 light_intensity;
+
 // Specify the output of the vertex stage
-out vec3 vertNormal;
+out vec3 normal;
+out vec3 half_2;
+out vec3 lightdir;
 
 void main()
 {
     // gl_Position is the output (a vec4) of the vertex shader
-    gl_Position = projectionTransform * modelViewTransform * vec4(vertCoordinates_in, 1.0);
-    vertNormal = normal_transformation * vertNormal_in;
+    vec4 pos = modelViewTransform * vec4(vertCoordinates_in, 1.0);
+    gl_Position = projectionTransform * pos;
+    vec4 light_pos = modelViewTransform * vec4(light_position, 1.0);
+    normal = normal_transformation * vertNormal_in;
+    vec3 v = normalize( -pos.xyz);
+    lightdir = normalize(light_pos.xyz - pos.xyz);
+    half_2 = normalize(v + lightdir);
 }

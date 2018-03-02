@@ -37,7 +37,10 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformLightPosition;
     GLint uniformLightIntensity;
     GLint uniformMaterialIa;
-    GLint uniformMaterialK;
+    GLint uniformMaterial_kd;
+    GLint uniformMaterial_ka;
+    GLint uniformMaterial_ks;
+    GLint uniformPhongExp;
 
     // Mesh values
     GLuint meshVAO;
