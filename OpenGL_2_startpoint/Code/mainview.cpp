@@ -155,8 +155,7 @@ void MainView::paintGL() {
 
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
-    //QMatrix3x3 normal_transforming = QMatrix3x3();
-    qDebug() << normal_transforming;
+    //qDebug() << normal_transforming;
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
@@ -194,7 +193,7 @@ void MainView::updateProjectionTransform()
 void MainView::updateModelTransforms()
 {
     meshTransform.setToIdentity();
-    meshTransform.translate(0, 0, -10);
+    meshTransform.translate(0, 0, -2);
     meshTransform.scale(scale);
     meshTransform.rotate(QQuaternion::fromEulerAngles(rotation));
 
