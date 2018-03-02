@@ -108,6 +108,10 @@ void MainView::createShaderProgram()
     uniformModelViewTransform_gouraud = shaderProgram_gouraud.uniformLocation("modelViewTransform");
     uniformProjectionTransform_gouraud = shaderProgram_gouraud.uniformLocation("projectionTransform");
     uniformNormal_transformation_gouraud = shaderProgram_gouraud.uniformLocation("normal_transformation");
+    uniformLightPosition = shaderProgram_gouraud.uniformLocation("light_position");
+    uniformLightIntensity = shaderProgram_gouraud.uniformLocation("light_intensity");
+    uniformMaterialIa = shaderProgram_gouraud.uniformLocation("material_Ia");
+    uniformMaterialK = shaderProgram_gouraud.uniformLocation("material_k");
 
     // Get the uniforms of phong
     uniformModelViewTransform_phong = shaderProgram_phong.uniformLocation("modelViewTransform");
@@ -174,19 +178,27 @@ void MainView::paintGL() {
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shaderProgram_phong.bind();
+    shaderProgram_gouraud.bind();
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
+    QVector3D light_position = QVector3D(1.0, 0.0, 0.0);
+    QVector3D light_intensity = QVector3D(1.0, 1.0, 1.0);
+    QVector3D material_Ia = QVector3D(0.0, 0.0, 1.0);
+    QVector4D material_k = QVector4D(0.2, 0.7, 0.5, 64);
 
     // Set the projection matrix
-    glUniformMatrix4fv(uniformProjectionTransform_phong, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransform_phong, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormal_transformation_phong, 1, GL_FALSE, normal_transforming.data());
+    glUniformMatrix4fv(uniformProjectionTransform_gouraud, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransform_gouraud, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormal_transformation_gouraud, 1, GL_FALSE, normal_transforming.data());
+    glUniform3f(uniformLightPosition, light_position[0], light_position[1], light_position[2]);
+    glUniform3f(uniformLightIntensity, light_intensity[0], light_intensity[1], light_intensity[2]);
+    glUniform3f(uniformMaterialIa, material_Ia[0], material_Ia[1], material_Ia[2]);
+    glUniform4f(uniformMaterialK, material_k[0], material_k[1], material_k[2], material_k[3]);
 
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
-    shaderProgram_phong.release();
+    shaderProgram_gouraud.release();
 }
 
 /**
