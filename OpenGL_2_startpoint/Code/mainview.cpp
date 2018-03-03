@@ -173,7 +173,6 @@ void MainView::loadMesh()
     QVector<QVector2D> textureCoords = model.getTextureCoords();
 
     QVector<float> meshData;
-    qDebug() << "vertex size " << vertexCoords.size() << "texture: " << textureCoords.size();
     meshData.reserve(2 * 3 * vertexCoords.size() + 2 * textureCoords.size());
 
     for (int i = 0; i < vertexCoords.length(); i++) {
@@ -222,12 +221,14 @@ void MainView::loadMesh()
 void MainView::loadTexture(QString file, GLuint texturepointer){
     QImage image = QImage(file);
     QVector<quint8> texture_image = imageToBytes(image);
+
     glBindTexture(GL_TEXTURE_2D, texturepointer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    GLsizei width = 1024;
-    GLsizei height = 1024;
+    //are width and height correct???
+    GLsizei width = image.width();
+    GLsizei height = image.height();
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_image.data());
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 // --- OpenGL drawing

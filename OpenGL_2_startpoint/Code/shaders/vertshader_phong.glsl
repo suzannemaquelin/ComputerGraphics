@@ -32,4 +32,5 @@ void main()
     vec3 v = normalize( -pos.xyz);
     lightdir = normalize(light_pos.xyz - pos.xyz);
     half_2 = normalize(v + lightdir);
+    texCoord = texCoordinates_in;
 }

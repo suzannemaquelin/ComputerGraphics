@@ -37,5 +37,7 @@ void main()
             + material_ks * light_intensity
             * pow( max( 0.0, dot(n, h) ), phongExp);
     //textureColor = texture2D(textureSampler, texCoord);
-    fColor = vec4(normalize(intensity), 1.0);
+    //fColor = vec4(normalize(intensity), 1.0);
+    //fColor = texture(textureSampler, texCoord);
+    fColor = vec4(texCoord, 0.0, 1.0);
 }

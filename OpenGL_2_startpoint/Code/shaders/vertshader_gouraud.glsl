@@ -43,4 +43,5 @@ void main()
             + material_ks * light_intensity
             * pow( max( 0.0, dot(n, half_2) ), phongExp);
     vertNormal = intensity;
+    texCoord = texCoordinates_in;
 }
