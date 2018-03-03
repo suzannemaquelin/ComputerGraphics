@@ -25,22 +25,12 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLShaderProgram shaderProgram_gouraud;
     QOpenGLShaderProgram shaderProgram_phong;
 
-    GLint uniformModelViewTransform_normal;
-    GLint uniformProjectionTransform_normal;
-    GLint uniformNormal_transformation_normal;
-    GLint uniformModelViewTransform_gouraud;
-    GLint uniformProjectionTransform_gouraud;
-    GLint uniformNormal_transformation_gouraud;
-    GLint uniformModelViewTransform_phong;
-    GLint uniformProjectionTransform_phong;
-    GLint uniformNormal_transformation_phong;
-    GLint uniformLightPosition;
-    GLint uniformLightIntensity;
-    GLint uniformMaterialIa;
-    GLint uniformMaterial_kd;
-    GLint uniformMaterial_ka;
-    GLint uniformMaterial_ks;
-    GLint uniformPhongExp;
+    GLint uniformModelViewTransform_normal, uniformProjectionTransform_normal, uniformNormal_transformation_normal;
+    GLint uniformModelViewTransform_gouraud, uniformProjectionTransform_gouraud, uniformNormal_transformation_gouraud;
+    GLint uniformModelViewTransform_phong, uniformProjectionTransform_phong, uniformNormal_transformation_phong;
+    GLint uniformLightPosition, uniformLightIntensity;
+    GLint uniformMaterialIa,uniformMaterial_kd, uniformMaterial_ka, uniformMaterial_ks, uniformPhongExp;
+    GLint uniformTexSampler;
 
     // Mesh values
     GLuint meshVAO;
@@ -52,6 +42,9 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     float scale = 1.f;
     QVector3D rotation;
     QMatrix4x4 projectionTransform;
+
+    //Textures
+    GLuint texture;
 
 public:
     enum ShadingMode : GLuint
@@ -66,6 +59,7 @@ public:
     void setRotation(int rotateX, int rotateY, int rotateZ);
     void setScale(int scale);
     void setShadingMode(ShadingMode shading);
+    QVector<quint8> imageToBytes (QImage image);
 
 protected:
     void initializeGL();
@@ -89,6 +83,7 @@ private slots:
 private:
     void createShaderProgram();
     void loadMesh();
+    void loadTexture(QString file, GLuint texturepointer);
 
     void destroyModelBuffers();
 

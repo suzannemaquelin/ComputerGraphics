@@ -6,6 +6,7 @@
 // Specify the input locations of attributes
 layout (location = 0) in vec3 vertCoordinates_in;
 layout (location = 1) in vec3 vertNormal_in;
+layout (location = 2) in vec2 texCoordinates_in;
 
 // Specify the Uniforms of the vertex shader
  uniform mat4 modelViewTransform;
@@ -19,6 +20,7 @@ layout (location = 1) in vec3 vertNormal_in;
 out vec3 normal;
 out vec3 half_2;
 out vec3 lightdir;
+out vec2 texCoord;
 
 void main()
 {

@@ -37,6 +37,36 @@ MainView::~MainView() {
     doneCurrent();
 }
 
+#include "mainview.h"
+
+QVector<quint8> MainView::imageToBytes(QImage image) {
+    // needed since (0,0) is bottom left in OpenGL
+    QImage im = image.mirrored();
+    QVector<quint8> pixelData;
+    pixelData.reserve(im.width()*im.height()*4);
+
+    for (int i = 0; i != im.height(); ++i) {
+        for (int j = 0; j != im.width(); ++j) {
+            QRgb pixel = im.pixel(j,i);
+
+            // pixel is of format #AARRGGBB (in hexadecimal notation)
+            // so with bitshifting and binary AND you can get
+            // the values of the different components
+            quint8 r = (quint8)((pixel >> 16) & 0xFF); // Red component
+            quint8 g = (quint8)((pixel >> 8) & 0xFF); // Green component
+            quint8 b = (quint8)(pixel & 0xFF); // Blue component
+            quint8 a = (quint8)((pixel >> 24) & 0xFF); // Alpha component
+
+            // Add them to the Vector
+            pixelData.append(r);
+            pixelData.append(g);
+            pixelData.append(b);
+            pixelData.append(a);
+        }
+    }
+    return pixelData;
+}
+
 // --- OpenGL initialization
 
 /**
@@ -70,6 +100,9 @@ void MainView::initializeGL() {
 
     createShaderProgram();
     loadMesh();
+
+    glGenTextures(1, &texture);
+    loadTexture(":/textures/cat_diff.png", texture);
 
     // Initialize transformations
     updateProjectionTransform();
@@ -108,25 +141,28 @@ void MainView::createShaderProgram()
     uniformModelViewTransform_gouraud = shaderProgram_gouraud.uniformLocation("modelViewTransform");
     uniformProjectionTransform_gouraud = shaderProgram_gouraud.uniformLocation("projectionTransform");
     uniformNormal_transformation_gouraud = shaderProgram_gouraud.uniformLocation("normal_transformation");
-    uniformLightPosition = shaderProgram_gouraud.uniformLocation("light_position");
-    uniformLightIntensity = shaderProgram_gouraud.uniformLocation("light_intensity");
-    uniformMaterialIa = shaderProgram_gouraud.uniformLocation("material_Ia");
-    uniformMaterial_ka = shaderProgram_gouraud.uniformLocation("material_ka");
-    uniformMaterial_kd = shaderProgram_gouraud.uniformLocation("material_kd");
-    uniformMaterial_ks = shaderProgram_gouraud.uniformLocation("material_ks");
-    uniformPhongExp = shaderProgram_gouraud.uniformLocation("phongExp");
+//    uniformLightPosition = shaderProgram_gouraud.uniformLocation("light_position");
+//    uniformLightIntensity = shaderProgram_gouraud.uniformLocation("light_intensity");
+//    uniformMaterialIa = shaderProgram_gouraud.uniformLocation("material_Ia");
+//    uniformMaterial_ka = shaderProgram_gouraud.uniformLocation("material_ka");
+//    uniformMaterial_kd = shaderProgram_gouraud.uniformLocation("material_kd");
+//    uniformMaterial_ks = shaderProgram_gouraud.uniformLocation("material_ks");
+//    uniformPhongExp = shaderProgram_gouraud.uniformLocation("phongExp");
+//    uniformTexSampler = shaderProgram_gouraud.uniformLocation("textureSampler");
 
     // Get the uniforms of phong
     uniformModelViewTransform_phong = shaderProgram_phong.uniformLocation("modelViewTransform");
     uniformProjectionTransform_phong = shaderProgram_phong.uniformLocation("projectionTransform");
     uniformNormal_transformation_phong = shaderProgram_phong.uniformLocation("normal_transformation");
-//    uniformLightPosition = shaderProgram_phong.uniformLocation("light_position");
-//    uniformLightIntensity = shaderProgram_phong.uniformLocation("light_intensity");
-//    uniformMaterialIa = shaderProgram_phong.uniformLocation("material_Ia");
-//    uniformMaterial_ka = shaderProgram_phong.uniformLocation("material_ka");
-//    uniformMaterial_kd = shaderProgram_phong.uniformLocation("material_kd");
-//    uniformMaterial_ks = shaderProgram_phong.uniformLocation("material_ks");
-//    uniformPhongExp = shaderProgram_phong.uniformLocation("phongExp");
+    uniformLightPosition = shaderProgram_phong.uniformLocation("light_position");
+    uniformLightIntensity = shaderProgram_phong.uniformLocation("light_intensity");
+    uniformMaterialIa = shaderProgram_phong.uniformLocation("material_Ia");
+    uniformMaterial_ka = shaderProgram_phong.uniformLocation("material_ka");
+    uniformMaterial_kd = shaderProgram_phong.uniformLocation("material_kd");
+    uniformMaterial_ks = shaderProgram_phong.uniformLocation("material_ks");
+    uniformPhongExp = shaderProgram_phong.uniformLocation("phongExp");
+    uniformTexSampler = shaderProgram_phong.uniformLocation("textureSampler");
+
 }
 
 void MainView::loadMesh()
@@ -134,19 +170,24 @@ void MainView::loadMesh()
     Model model(":/models/cat.obj");
     QVector<QVector3D> vertexCoords = model.getVertices();
     QVector<QVector3D> vertexNormals = model.getNormals();
+    QVector<QVector2D> textureCoords = model.getTextureCoords();
 
     QVector<float> meshData;
-    meshData.reserve(2 * 3 * vertexCoords.size());
+    qDebug() << "vertex size " << vertexCoords.size() << "texture: " << textureCoords.size();
+    meshData.reserve(2 * 3 * vertexCoords.size() + 2 * textureCoords.size());
 
     for (int i = 0; i < vertexCoords.length(); i++) {
         QVector3D coord = vertexCoords[i];
         QVector3D normals = vertexNormals[i];
+        QVector2D tex = textureCoords[i];
         meshData.append(coord.x());
         meshData.append(coord.y());
         meshData.append(coord.z());
         meshData.append(normals.x());
         meshData.append(normals.y());
         meshData.append(normals.z());
+        meshData.append(tex.x());
+        meshData.append(tex.y());
     }
 
     meshSize = vertexCoords.size();
@@ -163,17 +204,31 @@ void MainView::loadMesh()
     glBufferData(GL_ARRAY_BUFFER, meshData.size() * sizeof(float), meshData.data(), GL_STATIC_DRAW);
 
     // Set vertex coordinates to location 0
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     glEnableVertexAttribArray(0);
 
     // Set colour coordinates to location 1
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    // Set texture coordinates to location 2
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
 
+void MainView::loadTexture(QString file, GLuint texturepointer){
+    QImage image = QImage(file);
+    QVector<quint8> texture_image = imageToBytes(image);
+    glBindTexture(GL_TEXTURE_2D, texturepointer);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    GLsizei width = 1024;
+    GLsizei height = 1024;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_image.data());
+    //glGenerateMipmap(GL_TEXTURE_2D);
+}
 
 // --- OpenGL drawing
 
@@ -188,7 +243,12 @@ void MainView::paintGL() {
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shaderProgram_gouraud.bind();
+    shaderProgram_phong.bind();
+
+    //bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    //glUniform1i(uniformTexSampler, 0);
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
     QVector3D light_position = QVector3D(1.0, 0.0, 0.0);
@@ -214,7 +274,7 @@ void MainView::paintGL() {
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
-    shaderProgram_gouraud.release();
+    shaderProgram_phong.release();
 }
 
 /**
