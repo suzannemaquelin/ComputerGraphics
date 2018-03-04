@@ -28,9 +28,11 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformModelViewTransform_normal, uniformProjectionTransform_normal, uniformNormal_transformation_normal;
     GLint uniformModelViewTransform_gouraud, uniformProjectionTransform_gouraud, uniformNormal_transformation_gouraud;
     GLint uniformModelViewTransform_phong, uniformProjectionTransform_phong, uniformNormal_transformation_phong;
-    GLint uniformLightPosition, uniformLightIntensity;
-    GLint uniformMaterialIa,uniformMaterial_kd, uniformMaterial_ka, uniformMaterial_ks, uniformPhongExp;
-    GLint uniformTexSampler;
+    GLint uniformLightPosition_phong, uniformLightIntensity_phong;
+    GLint uniformLightPosition_gouraud, uniformLightIntensity_gouraud;
+    GLint uniformMaterialIa_phong, uniformMaterial_kd_phong, uniformMaterial_ka_phong, uniformMaterial_ks_phong, uniformPhongExp_phong;
+    GLint uniformMaterialIa_gouraud, uniformMaterial_kd_gouraud, uniformMaterial_ka_gouraud, uniformMaterial_ks_gouraud, uniformPhongExp_gouraud;
+    GLint uniformTexSampler_phong, uniformTexSampler_gouraud;
 
     // Mesh values
     GLuint meshVAO;
@@ -54,6 +56,8 @@ public:
 
     MainView(QWidget *parent = 0);
     ~MainView();
+
+    ShadingMode x;
 
     // Functions for widget input events
     void setRotation(int rotateX, int rotateY, int rotateZ);
@@ -84,6 +88,10 @@ private:
     void createShaderProgram();
     void loadMesh();
     void loadTexture(QString file, GLuint texturepointer);
+
+    void paintPhong();
+    void paintGouraud();
+    void paintNormal();
 
     void destroyModelBuffers();
 

@@ -18,6 +18,5 @@ out vec4 fColor;
 
 void main()
 {
-    //vec4 textureColor = texture2D(textureSampler, texCoord);
     fColor = vec4(normalize(vertNormal), 1.0);
 }

@@ -27,10 +27,12 @@ void main()
     // gl_Position is the output (a vec4) of the vertex shader
     vec4 pos = modelViewTransform * vec4(vertCoordinates_in, 1.0);
     gl_Position = projectionTransform * pos;
+
     vec4 light_pos = modelViewTransform * vec4(light_position, 1.0);
     normal = normal_transformation * vertNormal_in;
-    vec3 v = normalize( -pos.xyz);
+    vec3 v = normalize(-pos.xyz);
     lightdir = normalize(light_pos.xyz - pos.xyz);
     half_2 = normalize(v + lightdir);
+
     texCoord = texCoordinates_in;
 }
