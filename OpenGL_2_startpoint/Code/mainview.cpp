@@ -105,7 +105,7 @@ void MainView::initializeGL() {
     // Initialize transformations
     updateProjectionTransform();
     updateModelTransforms();
-    x = NORMAL;
+    shadingmode = PHONG;
 }
 
 void MainView::createShaderProgram()
@@ -246,7 +246,7 @@ void MainView::paintGL() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    switch(x) {
+    switch(shadingmode) {
         case PHONG:
             paintPhong();
             break;
@@ -410,9 +410,7 @@ void MainView::setScale(int newScale)
 
 void MainView::setShadingMode(ShadingMode shading)
 {
-    qDebug() << "Changed shading to" << shading;
-    x = shading;
-    Q_UNIMPLEMENTED();
+    shadingmode = shading;
 }
 
 // --- Private helpers

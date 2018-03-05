@@ -57,7 +57,7 @@ public:
     MainView(QWidget *parent = 0);
     ~MainView();
 
-    ShadingMode x;
+    ShadingMode shadingmode;
 
     // Functions for widget input events
     void setRotation(int rotateX, int rotateY, int rotateZ);
