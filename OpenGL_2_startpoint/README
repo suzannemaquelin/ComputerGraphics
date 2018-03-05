@@ -1,6 +1,8 @@
 We have implemented normal shading, gouraud shading and phong shading.
 We also implemented the controls for choosing a shading mode.
-We attempted to implement textures. However, we ran into some difficulties.
-When we used the sampler2D, instead of giving our cat a texture, the cat disappeared.
-Therefore we have commented this line in the phong fragment shader.
-Unforturnately, this means we cannot compare different wrapping and filter methods
+In mainview.cpp we have added three functions, paintPhong, paintGouraud, paintNormal, for using the correct shader and the relating uniforms.
+
+We also implemented the texture for the cat.
+For this we have added the function loadTexture and added the given function imageToBytes to mainview.cpp.
+
+Unforturnately, we did not have the time to compare compare different wrapping and filter methods.

@@ -222,7 +222,6 @@ void MainView::loadTexture(QString file, GLuint texturepointer){
 
     glBindTexture(GL_TEXTURE_2D, texturepointer);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //are width and height correct???
     GLsizei width = image.width();
     GLsizei height = image.height();
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_image.data());

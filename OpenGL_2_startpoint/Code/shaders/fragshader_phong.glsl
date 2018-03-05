@@ -29,10 +29,12 @@ void main()
 {
     vec3 n = normalize(normal);
 
-//    material_kd = texture2D(textureSampler, texCoord).rgb;
+//    material_kd = texture(textureSampler, texCoord).rgb;
     vec3 intensity = material_ka * material_Ia
             + material_kd * light_intensity * max( 0.0, dot(n, lightdir) )
             + material_ks * light_intensity
             * pow( max( 0.0, dot(n, half_2) ), phongExp);
-    fColor = vec4(normalize(intensity), 1.0);
+    vec4 t = texture(textureSampler, texCoord);
+    vec4 i = vec4(normalize(intensity), 1.0);
+    fColor = t * i;
 }
