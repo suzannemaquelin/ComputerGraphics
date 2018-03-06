@@ -74,8 +74,8 @@ private:
     QVector<QVector3D> norm;
     QVector<QVector2D> tex;
 
-    bool hNorms;
-    bool hTexs;
+    bool hNorms = false;
+    bool hTexs = false;
 };
 
 #endif // MODEL_H

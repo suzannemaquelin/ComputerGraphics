@@ -11,7 +11,9 @@
 #include <QOpenGLShaderProgram>
 #include <QTimer>
 #include <QVector3D>
+#include <QMatrix4x4>
 #include <memory>
+
 
 class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     Q_OBJECT
@@ -19,14 +21,32 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLDebugLogger *debugLogger;
     QTimer timer; // timer used for animation
 
-    QOpenGLShaderProgram shaderProgram;
-    GLuint VBO_cat;
-    GLuint VAO_cat;
-    GLuint x;
-    QMatrix4x4 translation_cat;
-    QMatrix4x4 perspective, rotation, scale;
-    QVector<QVector3D> catVertices, catNormals;
-    float aspect_ratio;
+    QOpenGLShaderProgram shaderProgram_normal;
+    QOpenGLShaderProgram shaderProgram_gouraud;
+    QOpenGLShaderProgram shaderProgram_phong;
+
+    GLint uniformModelViewTransform_normal, uniformProjectionTransform_normal, uniformNormal_transformation_normal;
+    GLint uniformModelViewTransform_gouraud, uniformProjectionTransform_gouraud, uniformNormal_transformation_gouraud;
+    GLint uniformModelViewTransform_phong, uniformProjectionTransform_phong, uniformNormal_transformation_phong;
+    GLint uniformLightPosition_phong, uniformLightIntensity_phong;
+    GLint uniformLightPosition_gouraud, uniformLightIntensity_gouraud;
+    GLint uniformMaterialIa_phong, uniformMaterial_kd_phong, uniformMaterial_ka_phong, uniformMaterial_ks_phong, uniformPhongExp_phong;
+    GLint uniformMaterialIa_gouraud, uniformMaterial_kd_gouraud, uniformMaterial_ka_gouraud, uniformMaterial_ks_gouraud, uniformPhongExp_gouraud;
+    GLint uniformTexSampler_phong, uniformTexSampler_gouraud;
+
+    // Mesh values
+    GLuint meshVAO;
+    GLuint meshVBO;
+    GLuint meshSize;
+    QMatrix4x4 meshTransform;
+
+    // Transforms
+    float scale = 1.f;
+    QVector3D rotation;
+    QMatrix4x4 projectionTransform;
+
+    //Textures
+    GLuint texture;
 
 public:
     enum ShadingMode : GLuint
@@ -37,19 +57,19 @@ public:
     MainView(QWidget *parent = 0);
     ~MainView();
 
+    ShadingMode shadingmode;
 
     // Functions for widget input events
     void setRotation(int rotateX, int rotateY, int rotateZ);
     void setScale(int scale);
     void setShadingMode(ShadingMode shading);
+    QVector<quint8> imageToBytes (QImage image);
 
 protected:
     void initializeGL();
     void resizeGL(int newWidth, int newHeight);
     void paintGL();
-    void createCat();
-    void matrixInit();
-    void translationMatrix(float x,float y, float z);
+
     // Functions for keyboard input events
     void keyPressEvent(QKeyEvent *ev);
     void keyReleaseEvent(QKeyEvent *ev);
@@ -66,7 +86,17 @@ private slots:
 
 private:
     void createShaderProgram();
+    void loadMesh();
+    void loadTexture(QString file, GLuint texturepointer);
 
+    void paintPhong();
+    void paintGouraud();
+    void paintNormal();
+
+    void destroyModelBuffers();
+
+    void updateProjectionTransform();
+    void updateModelTransforms();
 };
 
 #endif // MAINVIEW_H

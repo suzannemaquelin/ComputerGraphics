@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QTextStream>
 
+
 // A Private Vertex class for vertex comparison
 // DO NOT include "vertex.h" or something similar in this file
 struct Vertex {
@@ -27,9 +28,6 @@ struct Vertex {
 };
 
 Model::Model(QString filename) {
-    hNorms = false;
-    hTexs = false;
-
     qDebug() << ":: Loading model:" << filename;
     QFile file(filename);
     if(file.open(QIODevice::ReadOnly)) {
@@ -149,6 +147,7 @@ QVector<float> Model::getVNTInterleaved() {
     return buffer;
 }
 
+// Throws when there are no normals or texture values
 QVector<float> Model::getVNInterleaved_indexed() {
     QVector<float> buffer;
 
@@ -166,6 +165,7 @@ QVector<float> Model::getVNInterleaved_indexed() {
     return buffer;
 }
 
+// Throws when there are no normals or texture values
 QVector<float> Model::getVNTInterleaved_indexed() {
     QVector<float> buffer;
 
@@ -185,8 +185,6 @@ QVector<float> Model::getVNTInterleaved_indexed() {
 
     return buffer;
 }
-
-
 
 /**
  * @brief Model::getNumTriangles

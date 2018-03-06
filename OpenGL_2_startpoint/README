@@ -1,8 +1,0 @@
-We have implemented normal shading, gouraud shading and phong shading.
-We also implemented the controls for choosing a shading mode.
-In mainview.cpp we have added three functions, paintPhong, paintGouraud, paintNormal, for using the correct shader and the relating uniforms.
-
-We also implemented the texture for the cat.
-For this we have added the function loadTexture and added the given function imageToBytes to mainview.cpp.
-
-Unforturnately, we did not have the time to compare compare different wrapping and filter methods.

@@ -1,16 +1,19 @@
 #ifndef VERTEX_H
 #define VERTEX_H
-#include<vector>
 
+#include <QVector3D>
 
-class Vertex
+struct Vertex
 {
-public:
-    Vertex();
-    Vertex(float x, float y, float z, float red, float green, float blue);
-    float coordinates[3];
-    float colour[3];
+    QVector3D coords;
+    QVector3D color;
+
+    Vertex(QVector3D coords, QVector3D color)
+        :
+          coords(coords),
+          color(color)
+    {    }
 };
 
-
 #endif // VERTEX_H
+
