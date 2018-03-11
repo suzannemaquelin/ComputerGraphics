@@ -40,14 +40,20 @@ bool Raytracer::parseObjectNode(json const &node, string const &ifname)
     {
         Point pos(node["position"]);
         double radius = node["radius"];
-        float angle;
+        float angle = 0.0;
+
         auto angleStatus = node.find("angle");
         if (angleStatus != node.end()) {
             angle = node["angle"];
-        } else {
-            angle = 0.0;
         }
-        obj = ObjectPtr(new Sphere(pos, radius, angle));
+        auto rotationStatus = node.find("rotation");
+        if (rotationStatus != node.end()) {
+            Point rotation(node["rotation"]);
+            obj = ObjectPtr(new Sphere(pos, radius, rotation, angle));
+        } else {
+            obj = ObjectPtr(new Sphere(pos, radius, Point(0.0,0.0,0.0), angle));
+        }
+
     } else if (node["type"] == "triangle") {
         Point vertex1(node["vertex1"]);
         Point vertex2(node["vertex2"]);

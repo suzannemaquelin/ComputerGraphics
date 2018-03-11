@@ -39,7 +39,7 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
         float u, v;
         //pointmaping needs unit vector from hitpoint pointing to sphere's origin
         //this is exactly minus one times the normal vector
-        std::tie(u,v) = obj->pointMapping(-1 * N);
+        std::tie(u,v) = obj->pointMapping((-1*N).normalized());
         Image im = material->texture;
         color = im.colorAt(u, v);
     } else {
@@ -103,6 +103,7 @@ void Scene::render(Image &img)
     unsigned h = img.height();
     float step  = 1.0/(superSampling + 1);
 
+    #pragma omp parallel num_threads(2)
     #pragma omp parallel for
     for (unsigned y = 0; y < h; ++y)
     {
