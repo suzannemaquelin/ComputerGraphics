@@ -13,25 +13,28 @@ class Material
         double kd;          // diffuse intensity
         double ks;          // specular intensity
         double n;           // exponent for specular highlight size
+        bool hasTexture;    // boolean specifying to use color or texture
 
         Material() = default;
 
-        Material(Color const &color, double ka, double kd, double ks, double n)
+        Material(Color const &color, double ka, double kd, double ks, double n, bool hasTexture)
         :
             color(color),
             ka(ka),
             kd(kd),
             ks(ks),
-            n(n)
+            n(n),
+            hasTexture(hasTexture)
         {}
 
-        Material(Image const &texture, double ka, double kd, double ks, double n)
+        Material(Image const &texture, double ka, double kd, double ks, double n, bool hasTexture)
         :
             texture(texture),
             ka(ka),
             kd(kd),
             ks(ks),
-            n(n)
+            n(n),
+            hasTexture(hasTexture)
         {}
 };
 

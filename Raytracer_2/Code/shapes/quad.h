@@ -3,6 +3,9 @@
 
 #include "../object.h"
 #include "triangle.h"
+#include "../triple.h"
+
+#include <tuple>
 
 class Quad: public Object
 {
@@ -13,6 +16,7 @@ class Quad: public Object
         Triangle take_nearest(Point furthest, Point triangle_point, Point p1, Point p2, Point p3);
 
         virtual Hit intersect(Ray const &ray);
+        virtual std::tuple<float, float> pointMapping(Triple p);
 
         Point const v1;
         Point const v2;

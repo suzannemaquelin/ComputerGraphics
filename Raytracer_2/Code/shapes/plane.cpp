@@ -31,6 +31,12 @@ Hit Plane::intersect(Ray const &ray)
 
 }
 
+std::tuple<float, float> Plane::pointMapping(Triple p) {
+    float u = 0.5 + atan2(p.z,p.x) / 2*M_PI;
+    float v = 0.5 - asin(p.y) / M_PI;
+    return std::make_tuple(u,v);
+}
+
 Plane::Plane(float a, float b, float c, float d)
 :
     a(a),

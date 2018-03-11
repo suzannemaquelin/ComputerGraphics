@@ -1,0 +1,35 @@
+{
+    "Eye": [200, 200, 1000],
+    "Shadows": true,
+    "MaxRecursionDepth": 2,
+    "SuperSamplingFactor": 4,
+    "Lights": [
+        {
+            "position": [-200, 600, 1500],
+            "color": [0.4, 0.4, 0.8]
+        },
+        {
+            "position": [600, 600, 1500],
+            "color": [0.8, 0.8, 0.4]
+        }
+    ],
+    "Objects": [
+        {
+            "type": "sphere",
+            "comment": "bluegrid sphere",
+            "position": [140, 220, 400],
+            "radius": 50,
+            "rotation": [0,1,0.7],
+            "angle": 90,
+            "material":
+            {
+                "comment": "image is relative to scene file here!",
+                "texture": "bluegrid.png",
+                "ka": 0.2,
+                "kd": 0.8,
+                "ks": 0.0,
+                "n": 1
+            }
+        }
+    ]
+}

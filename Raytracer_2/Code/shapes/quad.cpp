@@ -76,6 +76,12 @@ Triangle Quad::take_nearest(Point furthest, Point triangle_point, Point p1, Poin
 
 }
 
+std::tuple<float, float> Quad::pointMapping(Triple p) {
+    float u = 0.5 + atan2(p.z,p.x) / 2*M_PI;
+    float v = 0.5 - asin(p.y) / M_PI;
+    return std::make_tuple(u,v);
+}
+
 Quad::Quad(Point const &v1, Point const &v2, Point const &v3, Point const &v4)
 : v1(v1),
   v2(v2),

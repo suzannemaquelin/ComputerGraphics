@@ -51,6 +51,12 @@ Hit Triangle::intersect(Ray const &ray)
         return Hit::NO_HIT();
 }
 
+std::tuple<float, float> Triangle::pointMapping(Triple p) {
+    float u = 0.5 + atan2(p.z,p.x) / 2*M_PI;
+    float v = 0.5 - asin(p.y) / M_PI;
+    return std::make_tuple(u,v);
+}
+
 Triangle::Triangle(Point const &v1, Point const &v2, Point const &v3)
 :
     vertex1(v1),

@@ -33,8 +33,18 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
     Vector N = min_hit.N;                          //the normal at hit point
     Vector V = -ray.D;                             //the view vector
 
+    // Find color depending on the material having texture or not
+    Color color;
+    if (material.hasTexture == true) {
+        float u, v;
+        std::tie(u,v) = obj->pointMapping(-N);
+        Image im = material.texture;
+        color = im.colorAt(u, v);
+    } else {
+        color = material.color;
+    }
+
     /* Calculation of the color (Phong model) */
-    Color color = material.color;
 
     Triple I_a = color * material.ka;
     Triple I_d, I_s;
@@ -54,7 +64,7 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
             I_s += lights[i]->color * pow(m, material.n);
         }
     }
-    I_d = I_d * (material.kd) * (material.color);
+    I_d = I_d * (material.kd) * (color);
     I_s = I_s * (material.ks);
 
     Color reflectionColor;

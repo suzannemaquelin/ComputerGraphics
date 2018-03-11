@@ -9,6 +9,7 @@
 #include "triple.h"
 #include "image.h"
 
+#include <tuple>
 #include <memory>
 class Object;
 typedef std::shared_ptr<Object> ObjectPtr;
@@ -20,9 +21,10 @@ class Object
 
         virtual ~Object() = default;
 
+        virtual std::tuple<float, float> pointMapping(Triple p) = 0; //map point in 3D to 2D coordinates
+
         virtual Hit intersect(Ray const &ray) = 0;  // must be implemented
                                                     // in derived class
-
 
 };
 

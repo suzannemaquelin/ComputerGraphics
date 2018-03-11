@@ -101,17 +101,19 @@ Material Raytracer::parseMaterialNode(json const &node) const
     auto colorStatus = node.find("color");
     if (colorStatus != node.end()) {
         Color color(node["color"]);
-        return Material(color, ka, kd, ks, n);
+        return Material(color, ka, kd, ks, n, false);
     }
 
     auto textureStatus = node.find("texture");
     if (textureStatus != node.end()) {
         string s = node["texture"];
-        Image im("../Scenes_rt2/" + s);
-        return Material(im, ka, kd, ks, n);
+        Image im("../Raytracer_2/Scenes_rt2/" + s);
+        //Image im;
+        //im.read_png("../Raytracer_2/Scenes_rt2/" + s);
+        return Material(im, ka, kd, ks, n, true);
     }
 
-    return Material(Color(), ka, kd, ks, n);
+    return Material(Color(), ka, kd, ks, n, false);
 }
 
 bool Raytracer::readScene(string const &ifname)

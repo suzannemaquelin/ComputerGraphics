@@ -58,15 +58,15 @@ Hit Sphere::intersect(Ray const &ray)
     return Hit(t,N);
 }
 
-std::tuple<float, float> pointMapping(Triple p) {
-    float u = 0.5 + atan2(p.z,p.x) / 2*M_PI;
+std::tuple<float, float> Sphere::pointMapping(Triple p) {
+    float u = 0.5 + atan2(p.z,p.x) / (2*M_PI);
     float v = 0.5 - asin(p.y) / M_PI;
     return std::make_tuple(u,v);
 }
 
-Sphere::Sphere(Point const &pos, double radius, float a)
+Sphere::Sphere(Point const &pos, double radius, float angle)
 :
     position(pos),
     r(radius),
-    angle(a)
+    a(angle)
 {}
