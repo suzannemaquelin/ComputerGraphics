@@ -113,11 +113,9 @@ Material Raytracer::parseMaterialNode(json const &node, string const &ifname) co
     auto textureStatus = node.find("texture");
     if (textureStatus != node.end()) {
         string s = node["texture"];
-        string ofname = ifname;   // replace file with texture
+        string ofname = ifname;   // replace image file with texture file
         ofname.erase(ofname.begin() + ofname.find_last_of('/'), ofname.end());
         ofname += "/" + s;
-        printf("%s\n", ofname.c_str());
-        fflush(stdout);
         Image im(ofname);
         return Material(im, ka, kd, ks, n, true);
     }

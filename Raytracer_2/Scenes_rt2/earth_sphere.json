@@ -19,8 +19,8 @@
             "comment": "earth sphere",
             "position": [140, 220, 400],
             "radius": 50,
-            "rotation": [0,1,0.7],
-            "angle": 90,
+            "rotation": [1,-0.7,0],
+            "angle": 80,
             "material":
             {
                 "comment": "image is relative to scene file here!",

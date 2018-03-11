@@ -59,12 +59,14 @@ Hit Sphere::intersect(Ray const &ray)
 }
 
 std::tuple<float, float> Sphere::pointMapping(Triple p) {
-//    This is done through the simplest possible rotation and then the whole sphere
-//    is rotated by angle degrees around the z-axis (note that this corresponds to
-//    subtracting the angle in radians from the angle gotten by the arctan).
-    float u = 0.5 + atan2(p.z,p.x) / (2*M_PI);
-//    u = u - (this->a * (M_PI/180));
-    float v = 0.5 + asin(p.y) / M_PI;
+    Triple rotation = rot.normalized();
+    float angle = a * M_PI / 180;
+    //according to Rodrigues' rotation formula
+    Triple rotated = p * cos(angle) + rotation.cross(p) * sin(angle) + rotation * (rotation.dot(p)) * (1 - cos(angle));
+
+    p = rotated.normalized();
+    float u = 0.5 + atan2(p.y,p.x) / (2*M_PI);
+    float v = 0.5 + asin(p.z) / M_PI;
     return std::make_tuple(u,v);
 }
 
