@@ -28,7 +28,7 @@
 using namespace std;        // no std:: required
 using json = nlohmann::json;
 
-bool Raytracer::parseObjectNode(json const &node)
+bool Raytracer::parseObjectNode(json const &node, string const &ifname)
 {
     ObjectPtr obj = nullptr;
 
@@ -79,7 +79,7 @@ bool Raytracer::parseObjectNode(json const &node)
         return false;
 
     // Parse material and add object to the scene
-    obj->material = parseMaterialNode(node["material"]);
+    obj->material = parseMaterialNode(node["material"], ifname);
     scene.addObject(obj);
     return true;
 }
@@ -91,7 +91,7 @@ Light Raytracer::parseLightNode(json const &node) const
     return Light(pos, col);
 }
 
-Material Raytracer::parseMaterialNode(json const &node) const
+Material Raytracer::parseMaterialNode(json const &node, string const &ifname) const
 {
     double ka = node["ka"];
     double kd = node["kd"];
@@ -107,9 +107,12 @@ Material Raytracer::parseMaterialNode(json const &node) const
     auto textureStatus = node.find("texture");
     if (textureStatus != node.end()) {
         string s = node["texture"];
-        Image im("../Raytracer_2/Scenes_rt2/" + s);
-        //Image im;
-        //im.read_png("../Raytracer_2/Scenes_rt2/" + s);
+        string ofname = ifname;   // replace file with texture
+        ofname.erase(ofname.begin() + ofname.find_last_of('/'), ofname.end());
+        ofname += "/" + s;
+        printf("%s\n", ofname.c_str());
+        fflush(stdout);
+        Image im(ofname);
         return Material(im, ka, kd, ks, n, true);
     }
 
@@ -163,7 +166,7 @@ try
 
     unsigned objCount = 0;
     for (auto const &objectNode : jsonscene["Objects"])
-        if (parseObjectNode(objectNode))
+        if (parseObjectNode(objectNode, ifname))
             ++objCount;
 
     cout << "Parsed " << objCount << " objects.\n";

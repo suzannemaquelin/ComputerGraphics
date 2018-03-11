@@ -22,10 +22,10 @@ class Raytracer
 
     private:
 
-        bool parseObjectNode(nlohmann::json const &node);
+        bool parseObjectNode(nlohmann::json const &node, std::string const &ifname);
 
         Light parseLightNode(nlohmann::json const &node) const;
-        Material parseMaterialNode(nlohmann::json const &node) const;
+        Material parseMaterialNode(nlohmann::json const &node, std::string const &ifname) const;
 };
 
 #endif

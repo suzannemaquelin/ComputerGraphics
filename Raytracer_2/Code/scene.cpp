@@ -28,25 +28,28 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
     // No hit? Return background color.
     if (!obj) return Color(0.0, 0.0, 0.0);
 
-    Material material = obj->material;              //the hit objects material
+    Material *material = &(obj->material);              //the hit objects material
     Point hit = ray.at(min_hit.t);                 //the hit point
     Vector N = min_hit.N;                          //the normal at hit point
     Vector V = -ray.D;                             //the view vector
 
     // Find color depending on the material having texture or not
     Color color;
-    if (material.hasTexture == true) {
+    if (material->hasTexture == true) {
         float u, v;
-        std::tie(u,v) = obj->pointMapping(-N);
-        Image im = material.texture;
+        //pointmaping needs unit vector from hitpoint pointing to sphere's origin
+        //this is exactly minus one times the normal vector
+        std::tie(u,v) = obj->pointMapping(-1 * N);
+        Image im = material->texture;
         color = im.colorAt(u, v);
     } else {
-        color = material.color;
+        color = material->color;
     }
+    //printf("color: %lf, %lf, %lf\n", color.x, color.y, color.z);
 
     /* Calculation of the color (Phong model) */
 
-    Triple I_a = color * material.ka;
+    Triple I_a = color * material->ka;
     Triple I_d, I_s;
 
     for (int i = 0; i < lights.size(); i++) {
@@ -61,19 +64,19 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
             R.normalize();
 
             double m = max(0.0, R.dot(V));
-            I_s += lights[i]->color * pow(m, material.n);
+            I_s += lights[i]->color * pow(m, material->n);
         }
     }
-    I_d = I_d * (material.kd) * (color);
-    I_s = I_s * (material.ks);
+    I_d = I_d * (material->kd) * (color);
+    I_s = I_s * (material->ks);
 
     Color reflectionColor;
-    if (reflectionDepth > 0 && material.ks > 0) {
+    if (reflectionDepth > 0 && material->ks > 0.0) {
         double s = N.dot(ray.D)*2;
         Triple R = ray.D - (N*s);
         R.normalize();
         reflectionColor = trace(Ray(hit + 0.1 * R, R), reflectionDepth-1);
-        reflectionColor = reflectionColor * material.ks;
+        reflectionColor = reflectionColor * material->ks;
     }
 
     return I_a + I_d + I_s + reflectionColor;
@@ -100,6 +103,7 @@ void Scene::render(Image &img)
     unsigned h = img.height();
     float step  = 1.0/(superSampling + 1);
 
+    #pragma omp parallel for
     for (unsigned y = 0; y < h; ++y)
     {
         for (unsigned x = 0; x < w; ++x)
