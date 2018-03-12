@@ -104,6 +104,7 @@ Material Raytracer::parseMaterialNode(json const &node, string const &ifname) co
     double ks = node["ks"];
     double n  = node["n"];
 
+    //find out to parse either a color or a texture
     auto colorStatus = node.find("color");
     if (colorStatus != node.end()) {
         Color color(node["color"]);
@@ -113,7 +114,9 @@ Material Raytracer::parseMaterialNode(json const &node, string const &ifname) co
     auto textureStatus = node.find("texture");
     if (textureStatus != node.end()) {
         string s = node["texture"];
-        string ofname = ifname;   // replace image file with texture file
+        //find right directory for texture file
+        string ofname = ifname;
+        // replace image file with texture file
         ofname.erase(ofname.begin() + ofname.find_last_of('/'), ofname.end());
         ofname += "/" + s;
         Image im(ofname);
@@ -136,6 +139,7 @@ try
 // -- Read your scene data in this section -------------------------------------
 // =============================================================================
 
+    //try to find "Shadows", else set it to false
     auto shadowStatus = jsonscene.find("Shadows");
     if (shadowStatus != jsonscene.end()) {
         bool shadow(jsonscene["Shadows"]);
@@ -144,6 +148,7 @@ try
         scene.setShadow(false);
     }
 
+    //try to find "MaxRecursionDepth", else set it to zero
     auto maxrecdepthStatus = jsonscene.find("MaxRecursionDepth");
     if (maxrecdepthStatus != jsonscene.end()) {
         int maxRecursionDepth(jsonscene["MaxRecursionDepth"]);
@@ -152,6 +157,7 @@ try
         scene.setMaxRecursionDepth(0);
     }
 
+    //try to find "SuperSamplingFactor", else set it to 1
     auto superSamplingStatus = jsonscene.find("SuperSamplingFactor");
     if (superSamplingStatus != jsonscene.end()) {
         int superSampling(jsonscene["SuperSamplingFactor"]);
@@ -163,7 +169,6 @@ try
     Point eye(jsonscene["Eye"]);
     scene.setEye(eye);
 
-    // TODO: add your other configuration settings here
 
     for (auto const &lightNode : jsonscene["Lights"])
         scene.addLight(parseLightNode(lightNode));

@@ -45,26 +45,27 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
     } else {
         color = material->color;
     }
-    //printf("color: %lf, %lf, %lf\n", color.x, color.y, color.z);
 
     /* Calculation of the color (Phong model) */
 
-    Triple I_a = color * material->ka;
+    Triple I_a = color * material->ka; //ambient color
     Triple I_d, I_s;
 
+    //find the color for all light sources and sum them
     for (int i = 0; i < lights.size(); i++) {
         Triple L = (lights[i]->position) - (hit);
         L.normalize();
         Ray rayFromLight = Ray(lights[i]->position, (hit - lights[i]->position).normalized());
         if (shadowOn == false || getClosest(rayFromLight) == obj) {
+            //the light hits the object of which we want to determine the color
             I_d += (lights[i]->color) * max(0.0, N.dot(L));
 
             double s = N.dot(L)*2;
-            Triple R = (N*s) - L;
+            Triple R = (N*s) - L; //reflection vector
             R.normalize();
 
-            double m = max(0.0, R.dot(V));
-            I_s += lights[i]->color * pow(m, material->n);
+            double maximum = max(0.0, R.dot(V));
+            I_s += lights[i]->color * pow(maximum, material->n);
         }
     }
     I_d = I_d * (material->kd) * (color);
@@ -72,9 +73,12 @@ Color Scene::trace(Ray const &ray, int const reflectionDepth)
 
     Color reflectionColor;
     if (reflectionDepth > 0 && material->ks > 0.0) {
+        //find the reflection color by sending a ray in the reflection direction
+        //and determine the color of the object which the ray hits
         double s = N.dot(ray.D)*2;
         Triple R = ray.D - (N*s);
         R.normalize();
+        //we add a small instance of reflection vector to hit to make sure we are on the right side of the sphere
         reflectionColor = trace(Ray(hit + 0.1 * R, R), reflectionDepth-1);
         reflectionColor = reflectionColor * material->ks;
     }
@@ -103,8 +107,6 @@ void Scene::render(Image &img)
     unsigned h = img.height();
     float step  = 1.0/(superSampling + 1);
 
-    #pragma omp parallel num_threads(2)
-    #pragma omp parallel for
     for (unsigned y = 0; y < h; ++y)
     {
         for (unsigned x = 0; x < w; ++x)
@@ -117,6 +119,7 @@ void Scene::render(Image &img)
                     col += trace(ray, maxRecursionDepth);
                 }
             }
+            //get the mean value for color over rays in a pixel
             col /= (superSampling*superSampling);
             col.clamp();
             img(x, y) = col;

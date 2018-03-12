@@ -7,27 +7,11 @@ using namespace std;
 
 Hit Sphere::intersect(Ray const &ray)
 {
-    /****************************************************
-    * RT1.1: INTERSECTION CALCULATION
-    *
-    * Given: ray, position, r
-    * Sought: intersects? if true: *t
-    *
-    * Insert calculation of ray/sphere intersection here.
-    *
-    * You have the sphere's center (C) and radius (r) as well as
-    * the ray's origin (ray.O) and direction (ray.D).
-    *
-    * If the ray does not intersect the sphere, return false.
-    * Otherwise, return true and place the distance of the
-    * intersection point from the ray origin in *t (see example).
-    ****************************************************/
+    //INTERSECTION CALCULATION
     double t;
     Triple center = position;
-    Triple dir = ray.D;
-    Triple oc = ray.O - center;
 
-    double term1 = dir.dot(ray.O - center);
+    double term1 = (ray.D).dot(ray.O - center);
     double term2 = (ray.O - center).length_2();
     double discriminant = term1*term1 - term2 + r*r;
 
@@ -35,6 +19,7 @@ Hit Sphere::intersect(Ray const &ray)
         return Hit::NO_HIT();
     }
 
+    //find out which hit point is closest and in front of eye
     double t1 = -term1 - sqrt(discriminant);
     double t2 = -term1 + sqrt(discriminant);
     t = min(t1, t2);
@@ -42,16 +27,9 @@ Hit Sphere::intersect(Ray const &ray)
         t = max(t1, t2);
     }
 
-    /****************************************************
-    * RT1.2: NORMAL CALCULATION
-    *
-    * Given: t, C, r
-    * Sought: N
-    *
-    * Insert calculation of the sphere's normal at the intersection point.
-    ****************************************************/
+    //NORMAL CALCULATION
 
-    Triple intersection = ray.O +(dir * t);
+    Triple intersection = ray.O +(ray.D * t);
     Vector N = intersection - center;
     N.normalize();
 
@@ -60,7 +38,7 @@ Hit Sphere::intersect(Ray const &ray)
 
 std::tuple<float, float> Sphere::pointMapping(Triple p) {
     Triple rotation = rot.normalized();
-    float angle = a * M_PI / 180;
+    float angle = a * M_PI / 180; //in radians
     //according to Rodrigues' rotation formula
     Triple rotated = p * cos(angle) + rotation.cross(p) * sin(angle) + rotation * (rotation.dot(p)) * (1 - cos(angle));
 
