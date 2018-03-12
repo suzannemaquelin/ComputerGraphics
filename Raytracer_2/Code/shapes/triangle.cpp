@@ -52,9 +52,12 @@ Hit Triangle::intersect(Ray const &ray)
 }
 
 std::tuple<float, float> Triangle::pointMapping(Triple p) {
-    float u = 0.5 + atan2(p.z,p.x) / 2*M_PI;
-    float v = 0.5 - asin(p.y) / M_PI;
-    return std::make_tuple(u,v);
+    //trivial implementation
+    if (p.x > 1.0 || p.y > 1.0) {
+        return std::make_tuple(0.0, 0.0);
+    } else {
+        return std::make_tuple(p.x, p.y);
+    }
 }
 
 Triangle::Triangle(Point const &v1, Point const &v2, Point const &v3)
