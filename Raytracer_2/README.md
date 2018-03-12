@@ -1,13 +1,14 @@
 
 
 ## Changes made in raytracer source files:
-To the `shape` directory, we added the files
-*`triangle.cpp/.h`: Triangle class, which is a subclass of the `Object` class. Represents a triangle in the scene.
-*`quad.cpp/.h`: Quad class, which is a subclass of the `Object` class. Represents a quad in the scene in the form of 2 triangles.
-*`plane.cpp/.h`: Plane class, which is a subclass of the `Object` class. Represents a plane in the scene.
-We edited the file `triple.cpp` to include the functions distance and equals.
-We edited the file `sphere.cpp` to correctly implement the function intersect
-We implemented phong ilumination in the class `scene.cpp`
+We used our Raytracer 1 code and made the following changes:
+In the object header file a pure virtual function "pointMapping" was added to map a point in 3D to 2D coordinates. We implemented this function in the class Sphere.
+A trivial implementation of pointMapping is added to the classes quad, plane and triangle. This was the only thing changed in those classes.
+
+To the class "Scene" some setters for additional data were added, e.g. Shadows. We changed the method "render" such that it supports supersampling. We do this by shooting multiple rays at one pixel and taking the mean of the colors we get from these rays. We added a function "getClosest", which returns the first object that the ray hits. This function helps us with computing shadows. We added the variable reflectionDepth to the method "trace" to be able to compute the reflectionColor recursively.
+We added a statement "#pragma omp parallel for" to the method "render" to make it faster. However, the -fopenmp flag was not yet added to the makefile.
+
+In the class "Raytracer", we added an argument string ifname to be able to find the right directory in the method parseMaterialNode for the given texture. We suppose this is in the same directory as the json file given for the scene. Also, in Raytracer we need to read “Shadows”, “MaxRecursionDepth”, “SuperSamplingFactor” and a texture if they are given. The first three we try to read in the method readScene and the texture we look for in the method parseMaterialNode.
 
 
 
