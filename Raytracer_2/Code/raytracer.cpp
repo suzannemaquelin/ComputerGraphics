@@ -51,7 +51,7 @@ bool Raytracer::parseObjectNode(json const &node, string const &ifname)
             Point rotation(node["rotation"]);
             obj = ObjectPtr(new Sphere(pos, radius, rotation, angle));
         } else {
-            obj = ObjectPtr(new Sphere(pos, radius, Point(0.0,0.0,0.0), angle));
+            obj = ObjectPtr(new Sphere(pos, radius, Point(1.0,0.0,0.0), angle));
         }
 
     } else if (node["type"] == "triangle") {
