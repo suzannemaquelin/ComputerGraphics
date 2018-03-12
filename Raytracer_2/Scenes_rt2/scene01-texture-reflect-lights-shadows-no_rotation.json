@@ -2,7 +2,7 @@
     "Eye": [200, 200, 1000],
     "Shadows": true,
     "MaxRecursionDepth": 2,
-    "SuperSamplingFactor": 4,
+    "SuperSamplingFactor": 1,
     "Lights": [
         {
             "position": [-200, 600, 1500],
@@ -61,8 +61,6 @@
             "comment": "Earth sphere",
             "position": [140, 220, 400],
             "radius": 50,
-            "rotation": [0,1,0.7],
-            "angle": 90,
             "material":
             {
                 "comment": "image is relative to scene file here!",
