@@ -107,6 +107,8 @@ void Scene::render(Image &img)
     unsigned h = img.height();
     float step  = 1.0/(superSampling + 1);
 
+    #pragma omp parallel num_threads(2)
+    #pragma omp parallel for
     for (unsigned y = 0; y < h; ++y)
     {
         for (unsigned x = 0; x < w; ++x)
