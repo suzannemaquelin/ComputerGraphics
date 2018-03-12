@@ -6,11 +6,12 @@ In the object header file a pure virtual function "pointMapping" was added to ma
 A trivial implementation of pointMapping is added to the classes quad, plane and triangle. This was the only thing changed in those classes.
 
 To the class "Scene" some setters for additional data were added, e.g. Shadows. We changed the method "render" such that it supports supersampling. We do this by shooting multiple rays at one pixel and taking the mean of the colors we get from these rays. We added a function "getClosest", which returns the first object that the ray hits. This function helps us with computing shadows. We added the variable reflectionDepth to the method "trace" to be able to compute the reflectionColor recursively.
-We added a statement "#pragma omp parallel for" to the method "render" to make it faster. However, the -fopenmp flag was not yet added to the makefile.
 
 In the class "Raytracer", we added an argument string ifname to be able to find the right directory in the method parseMaterialNode for the given texture. We suppose this is in the same directory as the json file given for the scene. Also, in Raytracer we need to read “Shadows”, “MaxRecursionDepth”, “SuperSamplingFactor” and a texture if they are given. The first three we try to read in the method readScene and the texture we look for in the method parseMaterialNode.
 
-
+For performance reasons:
+We added a statement "#pragma omp parallel for" to the method "render" to make it faster. However, the -fopenmp flag was not yet added to the makefile due to difficulties with macOS and omp.
+Also in the method trace in the class "Scene" we made the variable material point towards the material of the object instead of copying the material. This has as advantage that, for every ray, the complete texture is not copied, which is quite expensive.
 
 # Raytracer C++ framework for Introduction to Computer Graphics
 
