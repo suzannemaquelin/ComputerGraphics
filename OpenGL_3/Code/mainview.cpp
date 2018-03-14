@@ -135,12 +135,14 @@ void MainView::createShaderProgram()
     shaderProgram_phong.link();
 
     // Get the uniforms of normal
-    uniformModelViewTransform_normal = shaderProgram_normal.uniformLocation("modelViewTransform");
+    uniformModelTransform_normal = shaderProgram_normal.uniformLocation("modelTransform");
+    uniformViewTransform_normal = shaderProgram_normal.uniformLocation("viewTransform");
     uniformProjectionTransform_normal = shaderProgram_normal.uniformLocation("projectionTransform");
     uniformNormal_transformation_normal = shaderProgram_normal.uniformLocation("normal_transformation");
 
     // Get the uniforms of gouraud
-    uniformModelViewTransform_gouraud = shaderProgram_gouraud.uniformLocation("modelViewTransform");
+    uniformModelTransform_gouraud = shaderProgram_gouraud.uniformLocation("modelTransform");
+    uniformViewTransform_gouraud = shaderProgram_gouraud.uniformLocation("viewTransform");
     uniformProjectionTransform_gouraud = shaderProgram_gouraud.uniformLocation("projectionTransform");
     uniformNormal_transformation_gouraud = shaderProgram_gouraud.uniformLocation("normal_transformation");
     uniformLightPosition_gouraud = shaderProgram_gouraud.uniformLocation("light_position");
@@ -153,7 +155,8 @@ void MainView::createShaderProgram()
     uniformTexSampler_gouraud = shaderProgram_gouraud.uniformLocation("textureSampler");
 
     // Get the uniforms of phong
-    uniformModelViewTransform_phong = shaderProgram_phong.uniformLocation("modelViewTransform");
+    uniformModelTransform_phong = shaderProgram_phong.uniformLocation("modelTransform");
+    uniformViewTransform_phong = shaderProgram_phong.uniformLocation("viewTransform");
     uniformProjectionTransform_phong = shaderProgram_phong.uniformLocation("projectionTransform");
     uniformNormal_transformation_phong = shaderProgram_phong.uniformLocation("normal_transformation");
     uniformLightPosition_phong = shaderProgram_phong.uniformLocation("light_position");
@@ -168,21 +171,7 @@ void MainView::createShaderProgram()
 
 void MainView::prepareData()
 {
-//    glGenVertexArrays(1, &meshVAO);
-//    glGenBuffers(1, &meshVBO);
-//    loadMesh(":/models/cat.obj", meshVAO, meshVBO, &meshSize);
-//    glGenTextures(1, &texture);
-//    loadTexture(":/textures/cat_diff.png", texture);
-//    setTransform();
-
-//    glGenVertexArrays(1, &sphereVAO);
-//    glGenBuffers(1, &sphereVBO);
-//    loadMesh(":/models/cat.obj", sphereVAO, sphereVBO, &sphereSize);
-//    glGenTextures(1, &texture2);
-//    loadTexture(":/textures/rug_logo.png", texture2);
-//    setTransform();
-
-    noMeshes = 2;
+    noMeshes = 3;
     meshes = (mesh*) malloc(noMeshes*sizeof(struct mesh));
 
     mesh cat;
@@ -202,6 +191,15 @@ void MainView::prepareData()
     loadTexture(":/textures/rug_logo.png", sphere.texture);
     setTransform(QVector3D(0.0,0.0,-7.0), 1.0, &sphere);
     meshes[1] = sphere;
+
+    mesh sphere_2;
+    glGenVertexArrays(1, &(sphere_2.VAO));
+    glGenBuffers(1, &(sphere_2.VBO));
+    loadMesh(":/models/sphere.obj", sphere_2.VAO, sphere_2.VBO, &(sphere_2.size));
+    glGenTextures(1, &(sphere_2.texture));
+    loadTexture(":/textures/rug_logo.png", sphere_2.texture);
+    setTransform(QVector3D(0.0,0.5,7.0), 1.0, &sphere_2);
+    meshes[2] = sphere_2;
 }
 
 void MainView::setTransform(QVector3D trans, float addition, mesh* m){
@@ -325,6 +323,7 @@ void MainView::paintPhong()
     // Set global uniforms that are equal for each mesh
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_phong, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformViewTransform_phong, 1, GL_FALSE, viewTransform.data());
 
     // Set the lightdata
     QVector3D light_position = QVector3D(1.0, 0.0, 0.0);
@@ -347,7 +346,7 @@ void MainView::paintPhong()
 
     // Set the meshdata
     for (int m = 0; m < noMeshes; m++) {
-        drawMesh(meshes[m]);
+        drawMesh(meshes[m], uniformModelTransform_phong, uniformNormal_transformation_phong);
     }
 //    drawObjects(sphereVAO, texture2, sphereSize);
 
@@ -360,6 +359,7 @@ void MainView::paintGouraud()
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_gouraud, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformViewTransform_gouraud, 1, GL_FALSE, viewTransform.data());
 
     // Set the lightdata
     QVector3D light_position = QVector3D(1.0, 0.0, 0.0);
@@ -382,7 +382,7 @@ void MainView::paintGouraud()
 
     // Set the meshdata
     for (int m = 0; m < noMeshes; m++) {
-        drawMesh(meshes[m]);
+        drawMesh(meshes[m], uniformModelTransform_gouraud, uniformNormal_transformation_gouraud);
     }
 
     shaderProgram_gouraud.release();
@@ -394,16 +394,17 @@ void MainView::paintNormal()
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_normal, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformViewTransform_normal, 1, GL_FALSE, viewTransform.data());
 
     // Set the meshdata
     for (int m = 0; m < noMeshes; m++) {
-        drawMesh(meshes[m]);
+        drawMesh(meshes[m], uniformModelTransform_normal, uniformNormal_transformation_normal);
     }
 
     shaderProgram_normal.release();
 }
 
-void MainView::drawMesh(mesh m)
+void MainView::drawMesh(mesh m, GLuint uniformModelTransform, GLuint uniformNormal_Transform)
 {
     //bind vao of object
     glBindVertexArray(m.VAO);
@@ -414,8 +415,8 @@ void MainView::drawMesh(mesh m)
 
     //set uniforms for object
     QMatrix3x3 normal_transforming = m.transform.normalMatrix();
-    glUniformMatrix4fv(uniformModelViewTransform_phong, 1, GL_FALSE, m.transform.data());
-    glUniformMatrix3fv(uniformNormal_transformation_phong, 1, GL_FALSE, normal_transforming.data());
+    glUniformMatrix4fv(uniformModelTransform, 1, GL_FALSE, m.transform.data());
+    glUniformMatrix3fv(uniformNormal_Transform, 1, GL_FALSE, normal_transforming.data());
 
 
     //draw object
@@ -444,6 +445,13 @@ void MainView::updateProjectionTransform()
     projectionTransform.perspective(60, aspect_ratio, 0.2, 20);
 }
 
+void MainView::updateViewTransform()
+{
+    float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
+    viewTransform.setToIdentity();
+    viewTransform.perspective(60, aspect_ratio, 0.2, 20);
+}
+
 void MainView::updateModelTransforms(QMatrix4x4* transform, QVector3D ob_translation, float ob_scale, QVector3D ob_rotation)
 {
     (*transform).setToIdentity();
@@ -461,6 +469,7 @@ void MainView::destroyModelBuffers()
     for(int m = 0; m < noMeshes; m++) {
         glDeleteBuffers(1, &(meshes[m].VBO));
         glDeleteVertexArrays(1, &(meshes[m].VAO));
+        glDeleteTextures(1, &(meshes[m].texture));
     }
 }
 
@@ -468,7 +477,11 @@ void MainView::destroyModelBuffers()
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-    rotation = { static_cast<float>(rotateX), static_cast<float>(rotateY), static_cast<float>(rotateZ) };
+    QVector3D view_rotation = { static_cast<float>(rotateX), static_cast<float>(rotateY), static_cast<float>(rotateZ) };
+    viewTransform.setToIdentity();
+    viewTransform.rotate(QQuaternion::fromEulerAngles(view_rotation));
+
+    update();
 //    updateModelTransforms(&meshTransform, translation, scale, rotation);
 }
 

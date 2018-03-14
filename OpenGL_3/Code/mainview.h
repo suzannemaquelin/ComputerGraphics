@@ -25,9 +25,9 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLShaderProgram shaderProgram_gouraud;
     QOpenGLShaderProgram shaderProgram_phong;
 
-    GLint uniformModelViewTransform_normal, uniformProjectionTransform_normal, uniformNormal_transformation_normal;
-    GLint uniformModelViewTransform_gouraud, uniformProjectionTransform_gouraud, uniformNormal_transformation_gouraud;
-    GLint uniformModelViewTransform_phong, uniformProjectionTransform_phong, uniformNormal_transformation_phong;
+    GLint uniformModelTransform_normal, uniformViewTransform_normal, uniformProjectionTransform_normal, uniformNormal_transformation_normal;
+    GLint uniformModelTransform_gouraud, uniformViewTransform_gouraud, uniformProjectionTransform_gouraud, uniformNormal_transformation_gouraud;
+    GLint uniformModelTransform_phong, uniformViewTransform_phong, uniformProjectionTransform_phong, uniformNormal_transformation_phong;
     GLint uniformLightPosition_phong, uniformLightIntensity_phong;
     GLint uniformLightPosition_gouraud, uniformLightIntensity_gouraud;
     GLint uniformMaterialIa_phong, uniformMaterial_kd_phong, uniformMaterial_ka_phong, uniformMaterial_ks_phong, uniformPhongExp_phong;
@@ -51,6 +51,7 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QVector3D translation;
     QVector3D rotation;
     QMatrix4x4 projectionTransform;
+    QMatrix4x4 viewTransform;
 
     //Textures
     GLuint texture;
@@ -122,12 +123,13 @@ private:
     void paintGouraud();
     void paintNormal();
 
-    void drawMesh(mesh m);
+    void drawMesh(mesh m, GLuint uniformModel_Transform, GLuint uniformNormal_Transorm);
     void updatePositions();
 
     void destroyModelBuffers();
 
     void updateProjectionTransform();
+    void updateViewTransform();
     void updateModelTransforms(QMatrix4x4* transform, QVector3D translation, float scale, QVector3D rotation);
 
 };
