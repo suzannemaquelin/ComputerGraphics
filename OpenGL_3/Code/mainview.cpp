@@ -101,6 +101,7 @@ void MainView::initializeGL() {
     prepareData();
 
     // Initialize transformations
+    viewTransform.setToIdentity();
     updateProjectionTransform();
     for (int m = 0; m < noMeshes; m++) {
         printf("translation mesh: %lf %lf %lf\n", (meshes[m].translation).x(),(meshes[m].translation).y(), (meshes[m].translation).z());
@@ -477,12 +478,22 @@ void MainView::destroyModelBuffers()
 
 void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
 {
-    QVector3D view_rotation = { static_cast<float>(rotateX), static_cast<float>(rotateY), static_cast<float>(rotateZ) };
+    rotation_view = { static_cast<float>(rotateX), static_cast<float>(rotateY), static_cast<float>(rotateZ) };
     viewTransform.setToIdentity();
-    viewTransform.rotate(QQuaternion::fromEulerAngles(view_rotation));
+    viewTransform.rotate(QQuaternion::fromEulerAngles(rotation_view));
+    viewTransform.translate(translation_view);
 
     update();
 //    updateModelTransforms(&meshTransform, translation, scale, rotation);
+}
+
+void MainView::setTranslationView(int translateX, int translateY, int translateZ)
+{
+    viewTransform.setToIdentity();
+    viewTransform.rotate(QQuaternion::fromEulerAngles(rotation_view));
+    translation_view += { static_cast<float>(translateX), static_cast<float>(translateY), static_cast<float>(translateZ)};
+    viewTransform.translate(translation_view);
+    update();
 }
 
 void MainView::setScale(int newScale)

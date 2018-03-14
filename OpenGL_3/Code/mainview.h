@@ -34,16 +34,9 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     GLint uniformMaterialIa_gouraud, uniformMaterial_kd_gouraud, uniformMaterial_ka_gouraud, uniformMaterial_ks_gouraud, uniformPhongExp_gouraud;
     GLint uniformTexSampler_phong, uniformTexSampler_gouraud;
 
-    // Mesh values
-//    GLuint meshVAO;
-//    GLuint meshVBO;
-//    GLuint meshSize;
-//    QMatrix4x4 meshTransform;
-
-//    GLuint sphereVAO;
-//    GLuint  sphereVBO;
-//    GLuint  sphereSize;
-//    QMatrix4x4  sphereTransform;
+    // View values
+    QVector3D translation_view;
+    QVector3D rotation_view;
 
     // Transforms
     float scale = 1.f;
@@ -89,6 +82,7 @@ public:
 
     // Functions for widget input events
     void setRotation(int rotateX, int rotateY, int rotateZ);
+    void setTranslationView(int translateX, int translateY, int translateZ);
     void setScale(int scale);
     void setShadingMode(ShadingMode shading);
     QVector<quint8> imageToBytes (QImage image);
