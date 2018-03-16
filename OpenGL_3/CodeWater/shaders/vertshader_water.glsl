@@ -1,7 +1,7 @@
 #version 330 core
 
 // Define constants
-#define M_PI 3.141593
+const float M_PI = 3.141593;
 
 // Specify the input locations of attributes
 layout (location = 0) in vec3 vertCoordinates_in;
@@ -15,17 +15,25 @@ uniform mat3 normal_transformation;
 
 // Specify the output of the vertex stage
 out vec3 vertNormal;
+out vec3 normal;
 out vec2 uv_coordinates;
 
 void main()
 {
     // gl_Position is the output (a vec4) of the vertex shader
     vec3 vertex_coordinates = vertCoordinates_in;
+
     float frequency = 5.0;
     float amplitude = 0.5;
-    float phase = M_PI;
+    float phase = 0.0;
     vertex_coordinates.z += amplitude * sin(2 * M_PI * frequency * uv_coord.x + phase);
+
+    float dU = amplitude * 2 * M_PI * frequency * cos(2 * M_PI * frequency * uv_coord.x + phase);
+    float dV = 0.0;
+    normal = normalize(vec3(-dU, -dV, 1.0));
+
     gl_Position = projectionTransform * modelViewTransform * vec4(vertex_coordinates, 1.0);
+
     vertNormal = vertNormal_in;
     uv_coordinates = uv_coord;
 }

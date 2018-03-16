@@ -7,6 +7,7 @@
 // These must have the same type and name!
 in vec3 vertNormal;
 in vec2 uv_coordinates;
+in vec3 normal;
 
 // Specify the Uniforms of the fragment shaders
 // uniform vec3 lightPosition; // for example
@@ -18,5 +19,6 @@ out vec4 fColor;
 void main()
 {
     //fColor = vec4(normalize(vertNormal), 1.0);
-    fColor = vec4(uv_coordinates, 0.0, 1.0);
+    //fColor = vec4(uv_coordinates, 0.0, 1.0);
+    fColor = vec4(normal, 1.0);
 }
