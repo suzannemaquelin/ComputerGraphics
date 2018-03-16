@@ -92,24 +92,16 @@ void MainView::initializeGL() {
     qDebug() << ":: Using OpenGL" << qPrintable(glVersion);
 
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LEQUAL);
     glClearColor(0.0, 1.0, 0.0, 1.0);
 
     createShaderProgram();
-
     prepareData();
 
     // Initialize transformations
-    viewTransform.setToIdentity();
     updateProjectionTransform();
-    for (int m = 0; m < noMeshes; m++) {
-        printf("translation mesh: %lf %lf %lf\n", (meshes[m].translation).x(),(meshes[m].translation).y(), (meshes[m].translation).z());
-        updateModelTransforms(&(meshes[m].transform), meshes[m].translation, meshes[m].scale, meshes[m].rotation);
-    }
-    shadingmode = NORMAL;
-
-    timer.start(1000.0 / 60.0);
+    updateModelTransforms();
 }
 
 void MainView::createShaderProgram()
@@ -122,36 +114,19 @@ void MainView::createShaderProgram()
     shaderProgram_normal.link();
 
     // Get the uniforms of normal
-    uniformModelTransform_normal = shaderProgram_normal.uniformLocation("modelTransform");
-    uniformViewTransform_normal = shaderProgram_normal.uniformLocation("viewTransform");
+    uniformModelViewTransform_normal = shaderProgram_normal.uniformLocation("modelViewTransform");
     uniformProjectionTransform_normal = shaderProgram_normal.uniformLocation("projectionTransform");
     uniformNormal_transformation_normal = shaderProgram_normal.uniformLocation("normal_transformation");
 }
 
 void MainView::prepareData()
 {
-    noMeshes = 1;
-    meshes = (mesh*) malloc(noMeshes*sizeof(struct mesh));
-
-    mesh grid;
-    glGenVertexArrays(1, &(grid.VAO));
-    glGenBuffers(1, &(grid.VBO));
-    loadMesh(":/models/grid.obj", grid.VAO, grid.VBO, &(grid.size));
-//    glGenTextures(1, &(grid.texture));
-//    loadTexture(":/textures/cat_diff.png", grid.texture);
-    setTransform(QVector3D(0.0,0.0,-5.0), 1.0, &grid);
-    meshes[0] = grid;
+    glGenVertexArrays(1, &(meshVAO));
+    glGenBuffers(1, &(meshVBO));
+    loadMesh(":/models/grid.obj", meshVAO, meshVBO);
 }
 
-void MainView::setTransform(QVector3D trans, float addition, mesh* m){
-    (*m).translation = trans;
-    //translation = QVector3D(0, 0.0, 0.0);
-    (*m).rotation = QVector3D(0.0, 0.0, 0.0);
-    (*m).scale = 1.0;
-    (*m).rotation_addition = addition;
-}
-
-void MainView::loadMesh(QString model_file, GLuint VAO, GLuint VBO, GLuint* size)
+void MainView::loadMesh(QString model_file, GLuint VAO, GLuint VBO)
 {
     Model model(model_file);
     QVector<QVector3D> vertexCoords = model.getVertices();
@@ -177,7 +152,8 @@ void MainView::loadMesh(QString model_file, GLuint VAO, GLuint VBO, GLuint* size
         meshData.append((coord.y()+1)/2);
     }
 
-    (*size) = vertexCoords.size();
+    meshSize = vertexCoords.size();
+    printf("meshSize: %d\n", meshSize);
 
     // bind VAO
     glBindVertexArray(VAO);
@@ -204,18 +180,6 @@ void MainView::loadMesh(QString model_file, GLuint VAO, GLuint VBO, GLuint* size
     glBindVertexArray(0);
 }
 
-void MainView::loadTexture(QString file, GLuint texturepointer){
-    QImage image = QImage(file);
-    QVector<quint8> texture_image = imageToBytes(image);
-
-    glBindTexture(GL_TEXTURE_2D, texturepointer);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    GLsizei width = image.width();
-    GLsizei height = image.height();
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_image.data());
-    glGenerateMipmap(GL_TEXTURE_2D);
-}
-
 // --- OpenGL drawing
 
 /**
@@ -229,67 +193,32 @@ void MainView::paintGL() {
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //update positions/orientation of objects
-//    updatePositions();
+    //bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
-//    switch(shadingmode) {
-//        case PHONG:
-//            paintPhong();
-//            break;
-//        case NORMAL:
-            paintNormal();
-//            break;
-//        case GOURAUD:
-//            paintGouraud();
-//            break;
-//    }
+    paintNormal();
 }
 
-void MainView::updatePositions()
-{
-    for (int m = 0; m < noMeshes; m++) {
-        if (m == 0) {
-            meshes[m].transform.rotate(meshes[m].rotation_addition, QVector3D(1.0, 1.0, 0.0));
-            meshes[m].transform.translate(QVector3D(0.01, 0.0, 0.0));
-        } else {
-            meshes[m].transform.rotate(meshes[m].rotation_addition, QVector3D(0.0, 1.0, 0.0));
-        }
-    }
-}
 
 void MainView::paintNormal()
 {
     shaderProgram_normal.bind();
 
+    QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
+
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_normal, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformViewTransform_normal, 1, GL_FALSE, viewTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransform_normal, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormal_transformation_normal, 1, GL_FALSE, normal_transforming.data());
 
     // Set the meshdata
-    for (int m = 0; m < noMeshes; m++) {
-        drawMesh(meshes[m], uniformModelTransform_normal, uniformNormal_transformation_normal);
-    }
+    glBindVertexArray(meshVAO);
+    glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
     shaderProgram_normal.release();
 }
 
-void MainView::drawMesh(mesh m, GLuint uniformModelTransform, GLuint uniformNormal_Transform)
-{
-    //bind vao of object
-    glBindVertexArray(m.VAO);
-
-    //bind texture of object
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m.texture);
-
-    //set uniforms for object
-    QMatrix3x3 normal_transforming = m.transform.normalMatrix();
-    glUniformMatrix4fv(uniformModelTransform, 1, GL_FALSE, m.transform.data());
-    glUniformMatrix3fv(uniformNormal_Transform, 1, GL_FALSE, normal_transforming.data());
-
-    //draw object
-    glDrawArrays(GL_TRIANGLES, 0, m.size);
-}
 
 /**
  * @brief MainView::resizeGL
