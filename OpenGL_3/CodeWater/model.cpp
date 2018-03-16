@@ -1,5 +1,6 @@
 #include "model.h"
 
+#include <cmath>
 #include <QDebug>
 #include <QFile>
 #include <QTextStream>
