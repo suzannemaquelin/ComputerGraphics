@@ -212,9 +212,9 @@ void MainView::paintNormal()
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
     int numberOfWaves = 8;
-    float frequency[numberOfWaves] = {6.0, 5.0, 7.0, 8.0, 6.5, 3.0, 1.9, 4.7};
-    float amplitude[numberOfWaves] = {0.03, 0.04, 0.002, 0.07, 0.008, 0.013, 0.029, 0.046};
-    float phase[numberOfWaves] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    float frequency[8] = {6.0, 5.0, 7.0, 8.0, 6.5, 3.0, 1.9, 4.7};
+    float amplitude[8] = {0.03, 0.04, 0.002, 0.07, 0.008, 0.013, 0.029, 0.046};
+    float phase[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_normal, 1, GL_FALSE, projectionTransform.data());
