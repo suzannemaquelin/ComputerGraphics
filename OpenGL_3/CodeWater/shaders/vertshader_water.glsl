@@ -16,24 +16,41 @@ uniform int numberOfWaves;
 uniform float amplitude[8];
 uniform float frequency[8];
 uniform float phase[8];
+uniform float time;
+
+uniform vec3 light_position;
+uniform vec3 light_intensity;
 
 // Specify the output of the vertex stage
 out vec3 vertNormal;
 out vec3 normal;
 out vec2 uv_coordinates;
+out vec3 light_direction;
+out vec3 half_2;
 
 float waveHeight(int waveIdx, float uvalue){
-    return amplitude[waveIdx] * sin(2 * M_PI * frequency[waveIdx] * uvalue + phase[waveIdx]);
+    return amplitude[waveIdx] * sin(2 * M_PI * (frequency[waveIdx] * uvalue + time) + phase[waveIdx]);
 
 }
 
 float waveDU(int waveIdx, float uvalue){
-    return amplitude[waveIdx] * 2 * M_PI * frequency[waveIdx] * cos(2 * M_PI * frequency[waveIdx] * uvalue + phase[waveIdx]);
+    return amplitude[waveIdx] * 2 * M_PI * frequency[waveIdx] * cos(2 * M_PI * (frequency[waveIdx] * uvalue + time) + phase[waveIdx]);
 
 }
 
 void main()
 {
+    // gl_Position is the output (a vec4) of the vertex shader
+    vec4 pos = modelViewTransform * vec4(vertCoordinates_in, 1.0);
+    gl_Position = projectionTransform * pos;
+
+    vec4 light_pos = vec4(light_position, 1.0);
+    normal = normal_transformation * vertNormal_in;
+    vec3 v = normalize(-pos.xyz);
+    light_direction = normalize(light_pos.xyz - pos.xyz);
+    half_2 = normalize(v + light_direction);
+
+
     // gl_Position is the output (a vec4) of the vertex shader
     vec3 vertex_coordinates = vertCoordinates_in;
 
@@ -46,10 +63,7 @@ void main()
         dU += waveDU(w, uv_coord.x);
     }
     float dV = 0.0;
-    normal = normalize(vec3(-dU, -dV, 1.0));
+    vertNormal = normalize(vec3(-dU, -dV, 1.0));
 
-    gl_Position = projectionTransform * modelViewTransform * vec4(vertex_coordinates, 1.0);
-
-    vertNormal = vertNormal_in;
     uv_coordinates = uv_coord;
 }

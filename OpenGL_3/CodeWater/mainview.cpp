@@ -99,9 +99,12 @@ void MainView::initializeGL() {
     createShaderProgram();
     prepareData();
 
+    time = 0.0;
+
     // Initialize transformations
     updateProjectionTransform();
     updateModelTransforms();
+    timer.start(1000.0/60.0);
 }
 
 void MainView::createShaderProgram()
@@ -114,13 +117,22 @@ void MainView::createShaderProgram()
     shaderProgram_water.link();
 
     // Get the uniforms of normal
-    uniformModelViewTransform_normal = shaderProgram_water.uniformLocation("modelViewTransform");
-    uniformProjectionTransform_normal = shaderProgram_water.uniformLocation("projectionTransform");
-    uniformNormal_transformation_normal = shaderProgram_water.uniformLocation("normal_transformation");
+    uniformModelViewTransform = shaderProgram_water.uniformLocation("modelViewTransform");
+    uniformProjectionTransform = shaderProgram_water.uniformLocation("projectionTransform");
+    uniformNormal_transformation = shaderProgram_water.uniformLocation("normal_transformation");
     uniformAmplitude = shaderProgram_water.uniformLocation("amplitude");
     uniformFrequency = shaderProgram_water.uniformLocation("frequency");
     uniformPhase = shaderProgram_water.uniformLocation("phase");
     uniformNumberWaves = shaderProgram_water.uniformLocation("numberOfWaves");
+    uniformTime = shaderProgram_water.uniformLocation("time");
+
+    uniformLightPosition = shaderProgram_water.uniformLocation("light_position");
+    uniformLightIntensity = shaderProgram_water.uniformLocation("light_intensity");
+    uniformMaterialIa = shaderProgram_water.uniformLocation("material_Ia");
+    uniformMaterial_ka = shaderProgram_water.uniformLocation("material_ka");
+    uniformMaterial_kd = shaderProgram_water.uniformLocation("material_kd");
+    uniformMaterial_ks = shaderProgram_water.uniformLocation("material_ks");
+    uniformPhongExp = shaderProgram_water.uniformLocation("phong_exp");
 }
 
 void MainView::prepareData()
@@ -197,10 +209,6 @@ void MainView::paintGL() {
     glClearColor(0.2f, 0.5f, 0.7f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //bind texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
     paintNormal();
 }
 
@@ -215,15 +223,29 @@ void MainView::paintNormal()
     float frequency[8] = {6.0, 5.0, 7.0, 8.0, 6.5, 3.0, 1.9, 4.7};
     float amplitude[8] = {0.03, 0.04, 0.002, 0.07, 0.008, 0.013, 0.029, 0.046};
     float phase[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+//    time += 1.0/60.0;
 
     // Set the projection matrix
-    glUniformMatrix4fv(uniformProjectionTransform_normal, 1, GL_FALSE, projectionTransform.data());
-    glUniformMatrix4fv(uniformModelViewTransform_normal, 1, GL_FALSE, meshTransform.data());
-    glUniformMatrix3fv(uniformNormal_transformation_normal, 1, GL_FALSE, normal_transforming.data());
+    glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
+    glUniformMatrix4fv(uniformModelViewTransform, 1, GL_FALSE, meshTransform.data());
+    glUniformMatrix3fv(uniformNormal_transformation, 1, GL_FALSE, normal_transforming.data());
     glUniform1i(uniformNumberWaves, numberOfWaves);
     glUniform1fv(uniformAmplitude, numberOfWaves, amplitude);
     glUniform1fv(uniformFrequency, numberOfWaves, frequency);
     glUniform1fv(uniformPhase, numberOfWaves, phase);
+    glUniform1f(uniformTime, time);
+
+    QVector3D material_ia = QVector3D(0.0, 0.0, 0.0);
+    QVector3D material_ka = QVector3D(0.0, 0.0, 0.0);
+    QVector3D material_kd = QVector3D(0.0, 0.0, 0.0);
+    QVector3D material_ks = QVector3D(0.0, 0.0, 0.0);
+    float phong_exp = 32.0;
+
+    glUniform3f(uniformMaterialIa, material_ia.x(), material_ia.y(), material_ia.z());
+    glUniform3f(uniformMaterial_ka, material_ka.x(), material_ka.y(), material_ka.z());
+    glUniform3f(uniformMaterial_kd, material_kd.x(), material_kd.y(), material_kd.z());
+    glUniform3f(uniformMaterial_ks, material_ks.x(), material_ks.y(), material_ks.z());
+    glUniform1f(uniformPhongExp, phong_exp);
 
     // Set the meshdata
     glBindVertexArray(meshVAO);

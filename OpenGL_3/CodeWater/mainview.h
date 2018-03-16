@@ -24,8 +24,13 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     QOpenGLShaderProgram shaderProgram_water;
 
 
-    GLint uniformModelViewTransform_normal, uniformProjectionTransform_normal, uniformNormal_transformation_normal;
-    GLint uniformAmplitude, uniformFrequency, uniformPhase, uniformNumberWaves;
+    GLint uniformModelViewTransform, uniformProjectionTransform, uniformNormal_transformation;
+    GLint uniformAmplitude, uniformFrequency, uniformPhase, uniformNumberWaves, uniformTime;
+
+    GLint uniformLightPosition, uniformLightIntensity;
+    GLint uniformMaterialIa, uniformMaterial_kd, uniformMaterial_ka, uniformMaterial_ks, uniformPhongExp;
+
+    float time;
 
     // Mesh values
     GLuint meshVAO;
@@ -37,9 +42,6 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     float scale = 1.f;
     QVector3D rotation;
     QMatrix4x4 projectionTransform;
-
-    //Textures
-    GLuint texture;
 
 public:
     enum ShadingMode : GLuint
