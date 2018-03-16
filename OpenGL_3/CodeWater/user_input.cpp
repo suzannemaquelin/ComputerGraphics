@@ -7,17 +7,6 @@ void MainView::keyPressEvent(QKeyEvent *ev)
 {
     switch(ev->key()) {
     case 'A': qDebug() << "A pressed"; break;
-    case 16777235: MainView::setTranslationView(0,0,1); break; //up arrow key translates in z direction
-    case 16777237: MainView::setTranslationView(0,0,-1); break;//down arrow key translates in -z direction
-    case 16777234: MainView::setTranslationView(1,0,0); break; //left arrow key translates in x direction
-    case 16777236: MainView::setTranslationView(-1,0,0); break;//right arrow key translates in -x direction
-    case 'Y': MainView::setTranslationView(0,-1,0); break; //y key translates in -y direction
-    case 'H': MainView::setTranslationView(0,1,0); break;//h key translates in y direction
-    case 'O': //reset view to origin
-        MainView::translation_view = QVector3D(0.0, 0.0, 0.0);
-        MainView::rotation_view = QVector3D(0.0, 0.0, 0.0);
-        MainView::viewTransform = QMatrix4x4();
-        break;
     default:
         // ev->key() is an integer. For alpha numeric characters keys it equivalent with the char value ('A' == 65, '1' == 49)
         // Alternatively, you could use Qt Key enums, see http://doc.qt.io/qt-5/qt.html#Key-enum

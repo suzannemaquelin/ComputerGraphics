@@ -9,8 +9,7 @@ layout (location = 1) in vec3 vertNormal_in;
 layout (location = 2) in vec2 uv_coord;
 
 // Specify the Uniforms of the vertex shader
-uniform mat4 modelTransform;
-uniform mat4 viewTransform;
+uniform mat4 modelViewTransform;
 uniform mat4 projectionTransform;
 uniform mat3 normal_transformation;
 
@@ -22,8 +21,11 @@ void main()
 {
     // gl_Position is the output (a vec4) of the vertex shader
     vec3 vertex_coordinates = vertCoordinates_in;
-    vertex_coordinates.z += 0.5 * sin(2*3.1415*uv_coord.x);
-    gl_Position = projectionTransform * viewTransform * modelTransform * vec4(vertex_coordinates, 1.0);
+    float frequency = 5.0;
+    float amplitude = 0.5;
+    float phase = M_PI;
+    vertex_coordinates.z += amplitude * sin(2 * M_PI * frequency * uv_coord.x + phase);
+    gl_Position = projectionTransform * modelViewTransform * vec4(vertex_coordinates, 1.0);
     vertNormal = vertNormal_in;
     uv_coordinates = uv_coord;
 }

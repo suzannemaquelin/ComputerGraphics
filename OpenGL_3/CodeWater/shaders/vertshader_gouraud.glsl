@@ -9,11 +9,9 @@ layout (location = 1) in vec3 vertNormal_in;
 layout (location = 2) in vec2 texCoordinates_in;
 
 // Specify the Uniforms of the vertex shader
- uniform mat4 modelTransform;
- uniform mat4 viewTransform;
+ uniform mat4 modelViewTransform;
  uniform mat4 projectionTransform;
  uniform mat3 normal_transformation;
- uniform sampler2D textureSampler;
 
  uniform vec3 light_position;
  uniform vec3 light_intensity;
@@ -24,15 +22,16 @@ layout (location = 2) in vec2 texCoordinates_in;
  uniform float phongExp;
 
 // Specify the output of the vertex stage
-out vec4 vertNormal;
+out vec3 vertNormal;
+out vec2 texCoord;
 
 void main()
 {
     // gl_Position is the output (a vec4) of the vertex shader
-    vec4 pos = viewTransform * modelTransform * vec4(vertCoordinates_in, 1.0);
+    vec4 pos = modelViewTransform * vec4(vertCoordinates_in, 1.0);
     gl_Position = projectionTransform * pos;
 
-    vec4 light_pos = viewTransform * vec4(light_position, 1.0);
+    vec4 light_pos = modelViewTransform * vec4(light_position, 1.0);
     vec3 normal = normal_transformation * vertNormal_in;
     vec3 v = normalize(-pos.xyz);
     vec3 lightdir = normalize(light_pos.xyz - pos.xyz);
@@ -44,7 +43,6 @@ void main()
             + material_ks * light_intensity
             * pow( max( 0.0, dot(n, half_2) ), phongExp);
 
-    vec4 t = texture(textureSampler, texCoordinates_in);
-    vec4 i = vec4(normalize(intensity), 1.0);
-    vertNormal = t * i;
+    vertNormal = intensity;
+    texCoord = texCoordinates_in;
 }
