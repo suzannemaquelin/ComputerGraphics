@@ -155,22 +155,17 @@ void MainView::loadMesh(QString model_file, GLuint* VAO, GLuint* VBO)
     for (int i = 0; i < vertexCoords.length(); i++) {
         QVector3D coord = vertexCoords[i];
         QVector3D normals = vertexNormals[i];
-        //QVector2D tex = textureCoords[i];
         meshData.append(coord.x());
         meshData.append(coord.y());
         meshData.append(coord.z());
         meshData.append(normals.x());
         meshData.append(normals.y());
         meshData.append(normals.z());
-//        meshData.append(tex.x());
-//        meshData.append(tex.y());
         meshData.append((coord.x()+1)/2);
         meshData.append((coord.y()+1)/2);
     }
 
     meshSize = vertexCoords.size();
-    printf("meshSize: %d\n", meshSize);
-
     // bind VAO
     glBindVertexArray(*VAO);
 
@@ -223,7 +218,7 @@ void MainView::paintNormal()
     float frequency[8] = {6.0, 5.0, 7.0, 8.0, 6.5, 3.0, 1.9, 4.7};
     float amplitude[8] = {0.03, 0.04, 0.002, 0.07, 0.008, 0.013, 0.029, 0.046};
     float phase[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-//    time += 1.0/60.0;
+    //time += 1.0/60.0;
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform, 1, GL_FALSE, projectionTransform.data());
@@ -235,10 +230,16 @@ void MainView::paintNormal()
     glUniform1fv(uniformPhase, numberOfWaves, phase);
     glUniform1f(uniformTime, time);
 
-    QVector3D material_ia = QVector3D(0.0, 0.0, 0.0);
-    QVector3D material_ka = QVector3D(0.0, 0.0, 0.0);
-    QVector3D material_kd = QVector3D(0.0, 0.0, 0.0);
-    QVector3D material_ks = QVector3D(0.0, 0.0, 0.0);
+    // Set the lightdata
+    QVector3D light_position = QVector3D(10.0, 0.5, 10.0);
+    QVector3D light_intensity = QVector3D(1.0, 1.0, 1.0);
+    glUniform3f(uniformLightPosition, light_position[0], light_position[1], light_position[2]);
+    glUniform3f(uniformLightIntensity, light_intensity[0], light_intensity[1], light_intensity[2]);
+
+    QVector3D material_ia = QVector3D(0.5, 0.5, 1.0);
+    QVector3D material_kd = QVector3D(0.0, 0.0, 1.0);
+    QVector3D material_ka = QVector3D(0.7, 0.7, 0.7);
+    QVector3D material_ks = QVector3D(0.5, 0.5, 0.5);
     float phong_exp = 32.0;
 
     glUniform3f(uniformMaterialIa, material_ia.x(), material_ia.y(), material_ia.z());

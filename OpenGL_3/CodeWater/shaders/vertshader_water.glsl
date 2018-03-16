@@ -26,33 +26,22 @@ out vec3 vertNormal;
 out vec3 normal;
 out vec2 uv_coordinates;
 out vec3 light_direction;
-out vec3 half_2;
+out vec3 reflection;
+out vec3 view;
+out vec3 vertex_coordinates;
+out float absolute;
 
 float waveHeight(int waveIdx, float uvalue){
     return amplitude[waveIdx] * sin(2 * M_PI * (frequency[waveIdx] * uvalue + time) + phase[waveIdx]);
-
 }
 
 float waveDU(int waveIdx, float uvalue){
     return amplitude[waveIdx] * 2 * M_PI * frequency[waveIdx] * cos(2 * M_PI * (frequency[waveIdx] * uvalue + time) + phase[waveIdx]);
-
 }
 
 void main()
 {
-    // gl_Position is the output (a vec4) of the vertex shader
-    vec4 pos = modelViewTransform * vec4(vertCoordinates_in, 1.0);
-    gl_Position = projectionTransform * pos;
-
-    vec4 light_pos = vec4(light_position, 1.0);
-    normal = normal_transformation * vertNormal_in;
-    vec3 v = normalize(-pos.xyz);
-    light_direction = normalize(light_pos.xyz - pos.xyz);
-    half_2 = normalize(v + light_direction);
-
-
-    // gl_Position is the output (a vec4) of the vertex shader
-    vec3 vertex_coordinates = vertCoordinates_in;
+    vertex_coordinates = vertCoordinates_in;
 
     for (int w = 0; w < numberOfWaves; w++) {
         vertex_coordinates.z += waveHeight(w, uv_coord.x);
@@ -66,4 +55,21 @@ void main()
     vertNormal = normalize(vec3(-dU, -dV, 1.0));
 
     uv_coordinates = uv_coord;
+
+    // gl_Position is the output (a vec4) of the vertex shader
+    vec4 pos = modelViewTransform * vec4(vertex_coordinates, 1.0);
+    gl_Position = projectionTransform * pos;
+
+    vec4 light_pos = vec4(light_position, 1.0);
+    normal = normal_transformation * vertNormal_in;
+    view = normalize(-pos.xyz);
+    light_direction = normalize(light_pos.xyz - pos.xyz);
+    float dot = normal.x * light_direction.x + normal.y * light_direction.y + normal.z * light_direction.z;
+    reflection = 2 * dot * normal - light_direction;
+
+    float max_vector = 0.0;
+    for (int i = 0; i < numberOfWaves; i++) {
+        max_vector = max(max_vector, amplitude[i]);
+    }
+    absolute = max_vector;
 }
