@@ -107,16 +107,20 @@ void MainView::initializeGL() {
 void MainView::createShaderProgram()
 {
     // Create normal shader program
-    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Vertex,
+    shaderProgram_water.addShaderFromSourceFile(QOpenGLShader::Vertex,
                                            ":/shaders/vertshader_water.glsl");
-    shaderProgram_normal.addShaderFromSourceFile(QOpenGLShader::Fragment,
+    shaderProgram_water.addShaderFromSourceFile(QOpenGLShader::Fragment,
                                            ":/shaders/fragshader_water.glsl");
-    shaderProgram_normal.link();
+    shaderProgram_water.link();
 
     // Get the uniforms of normal
-    uniformModelViewTransform_normal = shaderProgram_normal.uniformLocation("modelViewTransform");
-    uniformProjectionTransform_normal = shaderProgram_normal.uniformLocation("projectionTransform");
-    uniformNormal_transformation_normal = shaderProgram_normal.uniformLocation("normal_transformation");
+    uniformModelViewTransform_normal = shaderProgram_water.uniformLocation("modelViewTransform");
+    uniformProjectionTransform_normal = shaderProgram_water.uniformLocation("projectionTransform");
+    uniformNormal_transformation_normal = shaderProgram_water.uniformLocation("normal_transformation");
+    uniformAmplitude = shaderProgram_water.uniformLocation("amplitude");
+    uniformFrequency = shaderProgram_water.uniformLocation("frequency");
+    uniformPhase = shaderProgram_water.uniformLocation("phase");
+    uniformNumberWaves = shaderProgram_water.uniformLocation("numberOfWaves");
 }
 
 void MainView::prepareData()
@@ -203,20 +207,29 @@ void MainView::paintGL() {
 
 void MainView::paintNormal()
 {
-    shaderProgram_normal.bind();
+    shaderProgram_water.bind();
+
 
     QMatrix3x3 normal_transforming = meshTransform.normalMatrix();
+    int numberOfWaves = 8;
+    float frequency[numberOfWaves] = {6.0, 5.0, 7.0, 8.0, 6.5, 3.0, 1.9, 4.7};
+    float amplitude[numberOfWaves] = {0.03, 0.04, 0.002, 0.07, 0.008, 0.013, 0.029, 0.046};
+    float phase[numberOfWaves] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
     // Set the projection matrix
     glUniformMatrix4fv(uniformProjectionTransform_normal, 1, GL_FALSE, projectionTransform.data());
     glUniformMatrix4fv(uniformModelViewTransform_normal, 1, GL_FALSE, meshTransform.data());
     glUniformMatrix3fv(uniformNormal_transformation_normal, 1, GL_FALSE, normal_transforming.data());
+    glUniform1i(uniformNumberWaves, numberOfWaves);
+    glUniform1fv(uniformAmplitude, numberOfWaves, amplitude);
+    glUniform1fv(uniformFrequency, numberOfWaves, frequency);
+    glUniform1fv(uniformPhase, numberOfWaves, phase);
 
     // Set the meshdata
     glBindVertexArray(meshVAO);
     glDrawArrays(GL_TRIANGLES, 0, meshSize);
 
-    shaderProgram_normal.release();
+    shaderProgram_water.release();
 }
 
 
