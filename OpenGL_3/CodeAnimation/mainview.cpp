@@ -314,7 +314,6 @@ void MainView::paintGL() {
 
 void MainView::updatePositions()
 {
-    printf("%d\n", turningPoint);
     if (turningPoint != 0 && turningPoint %600 == 0) {
         turningPoint = -599; // flip the direction
     } else {

@@ -6,9 +6,11 @@
 // Specify the inputs to the fragment shader
 // These must have the same type and name!
 in vec3 normal;
-in vec3 half_2;
 in vec3 lightdir;
 in vec2 texCoord;
+in vec3 reflection;
+in vec3 view;
+
 
 // Specify the Uniforms of the fragment shaders
 // uniform vec3 lightPosition; // for example
@@ -32,8 +34,7 @@ void main()
 //    material_kd = texture(textureSampler, texCoord).rgb;
     vec3 intensity = material_ka * material_Ia
             + material_kd * light_intensity * max( 0.0, dot(n, lightdir) )
-            + material_ks * light_intensity
-            * pow( max( 0.0, dot(n, half_2) ), phongExp);
+            + material_ks * light_intensity * pow( max(0.0, dot(reflection, view)), phongExp);
     vec4 t = texture(textureSampler, texCoord);
     vec4 i = vec4(normalize(intensity), 1.0);
     fColor = t * i;

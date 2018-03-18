@@ -19,9 +19,10 @@ layout (location = 2) in vec2 texCoordinates_in;
 
 // Specify the output of the vertex stage
 out vec3 normal;
-out vec3 half_2;
 out vec3 lightdir;
 out vec2 texCoord;
+out vec3 reflection;
+out vec3 view;
 
 void main()
 {
@@ -31,9 +32,11 @@ void main()
 
     vec4 light_pos = viewTransform * vec4(light_position, 1.0);
     normal = normal_transformation * vertNormal_in;
-    vec3 v = normalize(-pos.xyz);
+    view = normalize(-pos.xyz);
     lightdir = normalize(light_pos.xyz - pos.xyz);
-    half_2 = normalize(v + lightdir);
+
+    float dot = normal.x * lightdir.x + normal.y * lightdir.y + normal.z * lightdir.z;
+    reflection = 2 * dot * normal - lightdir;
 
     texCoord = texCoordinates_in;
 }
