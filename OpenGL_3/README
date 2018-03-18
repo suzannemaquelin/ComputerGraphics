@@ -1,8 +1,17 @@
-We have implemented normal shading, gouraud shading and phong shading.
-We also implemented the controls for choosing a shading mode.
-In mainview.cpp we have added three functions, paintPhong, paintGouraud, paintNormal, for using the correct shader and the relating uniforms.
+We have done the two different exercisez in two different code-bases.
+Common animation:
+We have made a struct containing all the data specific for an object named "mesh".
+In the mainview.cpp we have constructed an array with all our meshes.
+We have implemented that the view of the camera is changable by the arrowkeys, 'y' and 'h', to make it through space and the rotate-wigets are now applicable on the camera.
+For the objects to move, we have made a function "updatePositions", which updates the positions of all objects.
 
-We also implemented the texture for the cat.
-For this we have added the function loadTexture and added the given function imageToBytes to mainview.cpp.
 
-Unforturnately, we did not have the time to compare compare different wrapping and filter methods.
+Advanced vertex manipulation: water shader:
+We have created a new vertex shader and a new fragment shader, respectively called "vertshader_water.glsl" and "fragshader_water.glsl".
+For the first stap we have implemented the sinuses for the z-manipulation and the color as x,y coordinates mapped to red and green in RGB.
+After implementation of the calculation of normals, we the normal mapped to RGB. This resulted in a red-blue wavey frid.
+We implemented arrays, so multiple waves could be processed.
+Finally we implemented phong in the same manner as before, except that we used mix and smoothstep to determine the colour.
+Finally we animated water by adding a time segment to the function for the calculation of the wave(s).
+
+Maybe also important to NOTE: the fragment- and vertex shaders for phong-, gouraud-, and normalshading have been removed for simplicity reasons and not being of any importance.
