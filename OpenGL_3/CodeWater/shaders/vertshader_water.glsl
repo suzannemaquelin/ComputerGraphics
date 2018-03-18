@@ -19,7 +19,6 @@ uniform float phase[8];
 uniform float time;
 
 uniform vec3 light_position;
-uniform vec3 light_intensity;
 
 // Specify the output of the vertex stage
 out vec3 vertNormal;
@@ -44,12 +43,12 @@ void main()
     vertex_coordinates = vertCoordinates_in;
 
     for (int w = 0; w < numberOfWaves; w++) {
-        vertex_coordinates.z += waveHeight(w, uv_coord.x);
+        vertex_coordinates.z += waveHeight(w, uv_coord.x); //compute the new z coordinate according to the height of the wave
     }
 
     float dU = 0.0;
     for (int w = 0; w < numberOfWaves; w++) {
-        dU += waveDU(w, uv_coord.x);
+        dU += waveDU(w, uv_coord.x); //compute the derivative in the direction of u
     }
     float dV = 0.0;
     vertNormal = normalize(vec3(-dU, -dV, 1.0));
@@ -61,15 +60,17 @@ void main()
     gl_Position = projectionTransform * pos;
 
     vec4 light_pos = vec4(light_position, 1.0);
-    normal = normal_transformation * vertNormal_in;
-    view = normalize(-pos.xyz);
-    light_direction = normalize(light_pos.xyz - pos.xyz);
+    normal = normal_transformation * vertNormal;
+    view = normalize(-pos.xyz); //vector from object to camera
+    light_direction = normalize(light_pos.xyz - pos.xyz); //vector from object to light source
+    //compute dot product of vector normal and light_direction
     float dot = normal.x * light_direction.x + normal.y * light_direction.y + normal.z * light_direction.z;
-    reflection = 2 * dot * normal - light_direction;
+    reflection = 2 * dot * normal - light_direction; //vector from object in the direction of reflection
 
+    //get the maximum amplitude
     float max_vector = 0.0;
     for (int i = 0; i < numberOfWaves; i++) {
-        max_vector = max(max_vector, amplitude[i]);
+        max_vector = max(max_vector, abs(amplitude[i]));
     }
     absolute = max_vector;
 }

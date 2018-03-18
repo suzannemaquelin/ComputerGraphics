@@ -15,14 +15,11 @@ in vec3 vertex_coordinates;
 in float absolute;
 
 // Specify the Uniforms of the fragment shaders
-// uniform vec3 lightPosition; // for example
-uniform vec3 material_Ia;
 uniform vec3 material_ka;
 uniform vec3 material_kd;
 uniform vec3 material_ks;
 uniform float phong_exp;
 
-uniform vec3 light_position;
 uniform vec3 light_intensity;
 
 // Specify the output of the fragment shader
@@ -33,18 +30,19 @@ void main()
 {
     vec3 n = normalize(normal);
 
-    float step = smoothstep(-absolute, absolute, vertex_coordinates.z);
+    //take the absolute 5 times as high to get a smoother coloring
+    float step = smoothstep(- 5 *absolute, 5 * absolute, vertex_coordinates.z);
     vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 1.0, 1.0), step);
 
-//    material_kd = texture(textureSampler, texCoord).rgb;
-    vec3 intensity = material_ka * color
+    //phong shading using the calculated color variable instead of ambient color of material
+    vec3 intensity = material_ka * color;
             + material_kd * light_intensity * max( 0.0, dot(n, light_direction) )
             + material_ks * light_intensity
             * pow( max(0.0, dot(reflection, view)), phong_exp);
-    vec4 i = vec4(normalize(intensity), 1.0);
+    vec4 i = vec4(intensity, 1.0);
 
     fColor = i;
 
-    //fColor = vec4(normalize(vertNormal), 1.0);
-    //fColor = vec4(uv_coordinates, 0.0, 1.0);
+    //fColor = vec4(normalize(vertNormal), 1.0); //used in the part of the assignment to show normals
+    //fColor = vec4(uv_coordinates, 0.0, 1.0); //used in the height map part of the assignment
 }
