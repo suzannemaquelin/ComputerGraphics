@@ -14,5 +14,10 @@
         <file>shaders/fragshader_gouraud.glsl</file>
         <file>shaders/fragshader_normal.glsl</file>
         <file>shaders/fragshader_phong.glsl</file>
+        <file>textures/planet_earth.jpg</file>
+        <file>textures/planet_jupiter.jpg</file>
+        <file>textures/planet_mars.jpg</file>
+        <file>textures/planet_moon.jpg</file>
+        <file>textures/planet_sun.jpg</file>
     </qresource>
 </RCC>

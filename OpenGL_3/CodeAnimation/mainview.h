@@ -58,16 +58,16 @@ class MainView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
 
         // Transforms
         float scale = 1.f;
-        float rotation_addition = 0.0;
-        QVector3D translation_addition = QVector3D(0.0,0.0,0.0);
+        float rotation = 0.0;
         QVector3D translation;
-        QVector3D rotation;
+        QVector3D rotation_axis;
 
         //Textures
         GLuint texture;
     };
     mesh* meshes;
     int noMeshes;
+    int turningPoint;
 
 public:
     enum ShadingMode : GLuint
@@ -111,7 +111,7 @@ private:
     void prepareData();
     void loadMesh(QString model, GLuint VAO, GLuint VBO, GLuint* size);
     void loadTexture(QString file, GLuint texturepointer);
-    void setTransform(QVector3D trans, float addition, mesh* m);
+    void setTransform(QVector3D trans, QVector3D axis, float rotation, float scale, mesh* m);
 
     void paintPhong();
     void paintGouraud();

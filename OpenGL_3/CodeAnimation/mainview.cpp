@@ -105,7 +105,7 @@ void MainView::initializeGL() {
     updateProjectionTransform();
     for (int m = 0; m < noMeshes; m++) {
         printf("translation mesh: %lf %lf %lf\n", (meshes[m].translation).x(),(meshes[m].translation).y(), (meshes[m].translation).z());
-        updateModelTransforms(&(meshes[m].transform), meshes[m].translation, meshes[m].scale, meshes[m].rotation);
+        updateModelTransforms(&(meshes[m].transform), meshes[m].translation, meshes[m].scale, meshes[m].rotation_axis);
     }
     shadingmode = PHONG;
 
@@ -172,43 +172,52 @@ void MainView::createShaderProgram()
 
 void MainView::prepareData()
 {
-    noMeshes = 3;
+    turningPoint = 0;
+    noMeshes = 4;
     meshes = (mesh*) malloc(noMeshes*sizeof(struct mesh));
 
-    mesh cat;
-    glGenVertexArrays(1, &(cat.VAO));
-    glGenBuffers(1, &(cat.VBO));
-    loadMesh(":/models/cat.obj", cat.VAO, cat.VBO, &(cat.size));
-    glGenTextures(1, &(cat.texture));
-    loadTexture(":/textures/cat_diff.png", cat.texture);
-    setTransform(QVector3D(-2.0,-2.0,-2.0), 1.0, &cat);
-    meshes[0] = cat;
-
-    mesh sphere;
-    glGenVertexArrays(1, &(sphere.VAO));
-    glGenBuffers(1, &(sphere.VBO));
-    loadMesh(":/models/sphere.obj", sphere.VAO, sphere.VBO, &(sphere.size));
-    glGenTextures(1, &(sphere.texture));
-    loadTexture(":/textures/rug_logo.png", sphere.texture);
-    setTransform(QVector3D(0.0,0.0,-7.0), 1.0, &sphere);
-    meshes[1] = sphere;
+    mesh sphere_1;
+    glGenVertexArrays(1, &(sphere_1.VAO));
+    glGenBuffers(1, &(sphere_1.VBO));
+    loadMesh(":/models/sphere.obj", sphere_1.VAO, sphere_1.VBO, &(sphere_1.size));
+    glGenTextures(1, &(sphere_1.texture));
+    loadTexture(":/textures/planet_earth.jpg", sphere_1.texture);
+    setTransform(QVector3D(3.0,0.0,-10.0), QVector3D(0.0,1.0,0.0), 2.0, 1.0, &sphere_1);
+    meshes[0] = sphere_1;
 
     mesh sphere_2;
     glGenVertexArrays(1, &(sphere_2.VAO));
     glGenBuffers(1, &(sphere_2.VBO));
     loadMesh(":/models/sphere.obj", sphere_2.VAO, sphere_2.VBO, &(sphere_2.size));
     glGenTextures(1, &(sphere_2.texture));
-    loadTexture(":/textures/rug_logo.png", sphere_2.texture);
-    setTransform(QVector3D(0.0,0.5,7.0), 1.0, &sphere_2);
-    meshes[2] = sphere_2;
+    loadTexture(":/textures/planet_sun.jpg", sphere_2.texture);
+    setTransform(QVector3D(-3.0,0.5,-10.0), QVector3D(1.0,1.0,1.0), 1.0, 1.0, &sphere_2);
+    meshes[1] = sphere_2;
+
+    mesh cat_1;
+    glGenVertexArrays(1, &(cat_1.VAO));
+    glGenBuffers(1, &(cat_1.VBO));
+    loadMesh(":/models/cat.obj", cat_1.VAO, cat_1.VBO, &(cat_1.size));
+    glGenTextures(1, &(cat_1.texture));
+    loadTexture(":/textures/cat_diff.png", cat_1.texture);
+    setTransform(QVector3D(-4.0,1.5,-8.0), QVector3D(1.0,0.0,1.0), 4.0, 1.0, &cat_1);
+    meshes[2] = cat_1;
+
+    mesh cat_2;
+    glGenVertexArrays(1, &(cat_2.VAO));
+    glGenBuffers(1, &(cat_2.VBO));
+    loadMesh(":/models/cat.obj", cat_2.VAO, cat_2.VBO, &(cat_2.size));
+    glGenTextures(1, &(cat_2.texture));
+    loadTexture(":/textures/cat_spec.png", cat_2.texture);
+    setTransform(QVector3D(0.0,-3.0,-8.0), QVector3D(0.4,0.4,0.4), 1.0, 1.0, &cat_2);
+    meshes[3] = cat_2;
 }
 
-void MainView::setTransform(QVector3D trans, float addition, mesh* m){
-    (*m).translation = trans;
-    //translation = QVector3D(0, 0.0, 0.0);
-    (*m).rotation = QVector3D(0.0, 0.0, 0.0);
-    (*m).scale = 1.0;
-    (*m).rotation_addition = addition;
+void MainView::setTransform(QVector3D trans, QVector3D axis, float rotation, float scale, mesh* m){
+    m->translation = trans;
+    m->rotation = rotation;
+    m->rotation_axis = axis;
+    m->scale = scale;
 }
 
 void MainView::loadMesh(QString model_file, GLuint VAO, GLuint VBO, GLuint* size)
@@ -290,7 +299,6 @@ void MainView::paintGL() {
     //update positions/orientation of objects
     updatePositions();
 
-
     switch(shadingmode) {
         case PHONG:
             paintPhong();
@@ -306,12 +314,40 @@ void MainView::paintGL() {
 
 void MainView::updatePositions()
 {
+    printf("%d\n", turningPoint);
+    if (turningPoint != 0 && turningPoint %600 == 0) {
+        turningPoint = -599; // flip the direction
+    } else {
+        turningPoint++;
+    }
     for (int m = 0; m < noMeshes; m++) {
-        if (m == 0) {
-            meshes[m].transform.rotate(meshes[m].rotation_addition, QVector3D(1.0, 1.0, 0.0));
-            meshes[m].transform.translate(QVector3D(0.01, 0.0, 0.0));
-        } else {
-            meshes[m].transform.rotate(meshes[m].rotation_addition, QVector3D(0.0, 1.0, 0.0));
+        switch(m) {
+        case 0:
+            //earth
+            meshes[m].transform.rotate(meshes[m].rotation, meshes[m].rotation_axis);
+            break;
+        case 1:
+            //sun
+            meshes[m].transform.rotate(meshes[m].rotation, meshes[m].rotation_axis);
+            break;
+        case 2:
+            //red cat
+            meshes[m].transform.rotate(meshes[m].rotation, meshes[m].rotation_axis);
+            if (turningPoint < 0) {
+                meshes[m].transform.translate(QVector3D(-0.01, 0.0, 0.0));
+            } else {
+                meshes[m].transform.translate(QVector3D(0.01, 0.0, 0.0));
+            }
+            break;
+        case 3:
+            //black cat
+            meshes[m].transform.rotate(meshes[m].rotation, meshes[m].rotation_axis);
+            if (turningPoint < 0) {
+                meshes[m].transform.translate(QVector3D(0.0, -0.01, -0.005));
+            } else {
+                meshes[m].transform.translate(QVector3D(0.0, 0.01, 0.005));
+            }
+            break;
         }
     }
 }
@@ -328,7 +364,7 @@ void MainView::paintPhong()
 
     // Set the lightdata
     QVector3D light_position = QVector3D(1.0, 0.0, 0.0);
-    QVector3D light_intensity = QVector3D(0.0, 0.0, 1.0);
+    QVector3D light_intensity = QVector3D(1.0, 1.0, 1.0);
     glUniform3f(uniformLightPosition_phong, light_position[0], light_position[1], light_position[2]);
     glUniform3f(uniformLightIntensity_phong, light_intensity[0], light_intensity[1], light_intensity[2]);
 
@@ -347,6 +383,7 @@ void MainView::paintPhong()
 
     // Set the meshdata
     for (int m = 0; m < noMeshes; m++) {
+//        if (m == 1) continue;
         drawMesh(meshes[m], uniformModelTransform_phong, uniformNormal_transformation_phong);
     }
 //    drawObjects(sphereVAO, texture2, sphereSize);
@@ -443,14 +480,14 @@ void MainView::updateProjectionTransform()
 {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
     projectionTransform.setToIdentity();
-    projectionTransform.perspective(60, aspect_ratio, 0.2, 20);
+    projectionTransform.perspective(60, aspect_ratio, 0.2, 100);
 }
 
 void MainView::updateViewTransform()
 {
     float aspect_ratio = static_cast<float>(width()) / static_cast<float>(height());
     viewTransform.setToIdentity();
-    viewTransform.perspective(60, aspect_ratio, 0.2, 20);
+    viewTransform.perspective(60, aspect_ratio, 0.2, 100);
 }
 
 void MainView::updateModelTransforms(QMatrix4x4* transform, QVector3D ob_translation, float ob_scale, QVector3D ob_rotation)
@@ -484,7 +521,6 @@ void MainView::setRotation(int rotateX, int rotateY, int rotateZ)
     viewTransform.translate(translation_view);
 
     update();
-//    updateModelTransforms(&meshTransform, translation, scale, rotation);
 }
 
 void MainView::setTranslationView(int translateX, int translateY, int translateZ)
