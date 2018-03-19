@@ -104,7 +104,6 @@ void MainView::initializeGL() {
     viewTransform.setToIdentity();
     updateProjectionTransform();
     for (int m = 0; m < noMeshes; m++) {
-        printf("translation mesh: %lf %lf %lf\n", (meshes[m].translation).x(),(meshes[m].translation).y(), (meshes[m].translation).z());
         updateModelTransforms(&(meshes[m].transform), meshes[m].translation, meshes[m].scale, meshes[m].rotation_axis);
     }
     shadingmode = PHONG;
@@ -175,6 +174,8 @@ void MainView::prepareData()
     turningPoint = 0;
     noMeshes = 4;
     meshes = (mesh*) malloc(noMeshes*sizeof(struct mesh));
+
+    //generate VAO, VBO and texture for every mesh
 
     mesh sphere_1;
     glGenVertexArrays(1, &(sphere_1.VAO));
@@ -382,10 +383,8 @@ void MainView::paintPhong()
 
     // Set the meshdata
     for (int m = 0; m < noMeshes; m++) {
-//        if (m == 1) continue;
         drawMesh(meshes[m], uniformModelTransform_phong, uniformNormal_transformation_phong);
     }
-//    drawObjects(sphereVAO, texture2, sphereSize);
 
     shaderProgram_phong.release();
 }
@@ -454,7 +453,6 @@ void MainView::drawMesh(mesh m, GLuint uniformModelTransform, GLuint uniformNorm
     QMatrix3x3 normal_transforming = m.transform.normalMatrix();
     glUniformMatrix4fv(uniformModelTransform, 1, GL_FALSE, m.transform.data());
     glUniformMatrix3fv(uniformNormal_Transform, 1, GL_FALSE, normal_transforming.data());
-
 
     //draw object
     glDrawArrays(GL_TRIANGLES, 0, m.size);
