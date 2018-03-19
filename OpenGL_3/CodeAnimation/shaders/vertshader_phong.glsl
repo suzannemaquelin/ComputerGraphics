@@ -35,8 +35,7 @@ void main()
     view = normalize(-pos.xyz);
     lightdir = normalize(light_pos.xyz - pos.xyz);
 
-    float dot = normal.x * lightdir.x + normal.y * lightdir.y + normal.z * lightdir.z;
-    reflection = 2 * dot * normal - lightdir;
+    reflection = 2 * dot(normal, lightdir) * normal - lightdir;
 
     texCoord = texCoordinates_in;
 }

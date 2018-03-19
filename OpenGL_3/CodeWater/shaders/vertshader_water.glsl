@@ -63,9 +63,7 @@ void main()
     normal = normal_transformation * vertNormal;
     view = normalize(-pos.xyz); //vector from object to camera
     light_direction = normalize(light_pos.xyz - pos.xyz); //vector from object to light source
-    //compute dot product of vector normal and light_direction
-    float dot = normal.x * light_direction.x + normal.y * light_direction.y + normal.z * light_direction.z;
-    reflection = 2 * dot * normal - light_direction; //vector from object in the direction of reflection
+    reflection = 2 * dot(normal, light_direction) * normal - light_direction; //vector from object in the direction of reflection
 
     //get the maximum amplitude
     float max_vector = 0.0;
