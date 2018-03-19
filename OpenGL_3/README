@@ -1,4 +1,4 @@
-We have done the two different exercisez in two different code-bases.
+We have done the two different exercises in two different code-bases.
 Common animation:
 We have made a struct containing all the data specific for an object named "mesh".
 In the mainview.cpp we have constructed an array with all our meshes.
@@ -8,10 +8,10 @@ For the objects to move, we have made a function "updatePositions", which update
 
 Advanced vertex manipulation: water shader:
 We have created a new vertex shader and a new fragment shader, respectively called "vertshader_water.glsl" and "fragshader_water.glsl".
-For the first stap we have implemented the sinuses for the z-manipulation and the color as x,y coordinates mapped to red and green in RGB.
-After implementation of the calculation of normals, we the normal mapped to RGB. This resulted in a red-blue wavey frid.
+For the first step we have implemented the sinuses for the z-manipulation and the color as x,y coordinates mapped to red and green in RGB.
+After implementation of the calculation of normals, we mapped the normal to RGB. This resulted in a red-blue wavey frid.
 We implemented arrays, so multiple waves could be processed.
-Finally we implemented phong in the same manner as before, except that we used mix and smoothstep to determine the colour.
+Finally we implemented phong in the same manner as before, except that we used mix and smoothstep to determine the colour instead of using the ambient color.
 Finally we animated water by adding a time segment to the function for the calculation of the wave(s).
 
 Maybe also important to NOTE: the fragment- and vertex shaders for phong-, gouraud-, and normalshading have been removed for simplicity reasons and not being of any importance.
